@@ -26,8 +26,7 @@ class MYEPG:
                 os.system(f"{epg_sh} {os.path.dirname(__file__)}")
             else:
                 epg_sh = os.path.join(os.path.dirname(__file__), 'file', 'epg_update.sh')
-                # os.system(f"chmod 777 {os.path.dirname(__file__)}")
-                os.chmod(epg_sh, 0o777)
+                os.system(f"chmod -R 777 {os.path.dirname(__file__)}")
                 os.system(f"{epg_sh} {os.path.dirname(__file__)}")
         except Exception as e: 
             P.logger.exception(f'Exception:{str(e)}')
