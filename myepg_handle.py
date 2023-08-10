@@ -21,12 +21,9 @@ class MYEPG:
     @classmethod
     def epg_update_script(cls):
         try:
-            if platform.system() == 'Windows':
-                epg_sh = os.path.join(os.path.dirname(__file__), 'file', 'epg_update.bat')
-                os.system(f"{epg_sh} {os.path.dirname(__file__)}")
-            else:
-                epg_sh = os.path.join(os.path.dirname(__file__), 'file', 'epg_update.sh')
-                os.system(f"chmod -R 777 {os.path.dirname(__file__)}")
-                os.system(f"{epg_sh} {os.path.dirname(__file__)}")
+            import subprocess
+            cur_dir = os.path.dirname(__file__)
+            subprocess.call(f"epg2xml run --config {cur_dir}/file/epg2xml.json --channelfile {cur_dir}/file/Channel.json --xmlfile {cur_dir}/file/xmltv.xml", shell=True)
+            # subprocess.call(["epg2xml", "run", "--config", f"{cur_dir}/file/epg2xml.json", "--channelfile", f"{cur_dir}/file/Channel.json", "--xmlfile",  f"{cur_dir}/file/xmltv.xml"])
         except Exception as e: 
             P.logger.exception(f'Exception:{str(e)}')
