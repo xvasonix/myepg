@@ -187,7 +187,8 @@
       { "Name": "KISS - 탑골 K-POP", "Icon_url": "https://img.wavve.com/BMS/Channelimage30/image/C2713_Img_20230503183048.jpg", "ServiceId": "C2713" },
       { "Name": "W Music Story - Hot! Remix Music", "Icon_url": "https://img.wavve.com/BMS/Channelimage30/image/F9502_Img_20230511131838.png", "ServiceId": "F9502" },
       { "Name": "W Music Story - HOT! K_POP Music", "Icon_url": "https://img.wavve.com/BMS/Channelimage30/image/F9501_Img_20230511131729.png", "ServiceId": "F9501" }
-    ]
+    ],
+    "ENABLED": true
   },
   "TVING": {
     "MY_CHANNELS": [
@@ -223,7 +224,8 @@
       { "Name": "SBS F!L", "Icon_url": "https://image.tving.com/upload/cms/caic/CAIC1600/C43341.png", "ServiceId": "C43341", "Category": "음악/오락" },
       { "Name": "SBS M", "Icon_url": "https://image.tving.com/upload/cms/caic/CAIC1600/C43242.png", "ServiceId": "C43242", "Category": "음악/오락" },
       { "Name": "JTBC4", "Icon_url": "https://image.tving.com/upload/cms/caic/CAIC1600/C22041.png", "ServiceId": "C22041", "Category": "음악/오락" }
-    ]
+    ],
+    "ENABLED": true
   },
   "SPOTV": {
     "MY_CHANNELS": []
