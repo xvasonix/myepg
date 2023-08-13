@@ -12,14 +12,14 @@ class ModuleMain(PluginModuleBase):
             f'{self.name}_db_version' : '1',
             f'{self.name}_auto_start' : 'False',
             f'{self.name}_interval' : '0 3 * * *',
-            "KT": False,
-            "LG": False,
-            "SK": False,
-            "DAUM": False,
-            "NAVER": False,
-            "WAVVE": True,
-            "TVING": True,
-            "SPOTV": False,
+            'KT': 'False',
+            'LG': 'False',
+            'SK': 'False',
+            'DAUM': 'False',
+            'NAVER': 'False',
+            'WAVVE': 'True',
+            'TVING': 'True',
+            'SPOTV': 'False',
         }
 
 
