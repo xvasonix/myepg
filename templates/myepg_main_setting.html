@@ -16,6 +16,15 @@
     {{ macros.m_tab_content_start('normal', true) }}
       <!-- {{ macros.info_text_go('api_epg', 'EPG', value=arg['api_epg']) }} -->
       {{ macros.info_text_go('api_epgall', 'EPGALL', value=arg['api_epgall']) }}
+      {{ macros.m_hr() }}
+      {{ macros.setting_checkbox('KT', 'KT', value=arg['KT']) }}
+      {{ macros.setting_checkbox('LG', 'LG', value=arg['LG']) }}
+      {{ macros.setting_checkbox('SK', 'SK', value=arg['SK']) }}
+      {{ macros.setting_checkbox('DAUM', 'DAUM', value=arg['DAUM']) }}
+      {{ macros.setting_checkbox('NAVER', 'NAVER', value=arg['NAVER']) }}
+      {{ macros.setting_checkbox('WAVVE', 'WAVVE', value=arg['WAVVE']) }}
+      {{ macros.setting_checkbox('TVING', 'TVING', value=arg['TVING']) }}
+      {{ macros.setting_checkbox('SPOTV', 'SPOTV', value=arg['SPOTV']) }}
     {{ macros.m_tab_content_end() }}  
     {{ macros.m_tab_content_start('auto', false) }}
       {{ macros.global_setting_scheduler_button(arg['is_include'], arg['is_running']) }}

@@ -1,9 +1,13 @@
 
 from datetime import datetime
 import os, platform
-from support import logger
-
 from .setup import P
+
+import subprocess
+import json
+from collections import OrderedDict
+import re
+
 
 class MYEPG:
 
@@ -21,9 +25,91 @@ class MYEPG:
     @classmethod
     def epg_update_script(cls):
         try:
-            import subprocess
             cur_dir = os.path.dirname(__file__)
-            subprocess.call(f"epg2xml run --config {cur_dir}/file/epg2xml.json --channelfile {cur_dir}/file/Channel.json --xmlfile {cur_dir}/file/xmltv.xml", shell=True)
-            # subprocess.call(["epg2xml", "run", "--config", f"{cur_dir}/file/epg2xml.json", "--channelfile", f"{cur_dir}/file/Channel.json", "--xmlfile",  f"{cur_dir}/file/xmltv.xml"])
+            channel_json_path = f"{cur_dir}/file/Channel.json"
+            epg2xml_json_path = f"{cur_dir}/file/epg2xml.json"
+            xmltv_path = f"{cur_dir}/file/xmltv.xml"
+
+            cls.createDirectory(f"{cur_dir}/file")
+
+            P.logger.info('epg_update_script start')
+            subprocess.call(f"epg2xml update_channels --channelfile {channel_json_path}", shell=True)  
+
+            P.logger.info('epg_update_script make epg2xml.json')
+            epg2xml_default = {
+                "GLOBAL": {
+                    "ENABLED": True,
+                    "FETCH_LIMIT": 2,
+                    "ID_FORMAT": "{ServiceId}.{Source.lower()}",
+                    "ADD_REBROADCAST_TO_TITLE": False,
+                    "ADD_EPNUM_TO_TITLE": True,
+                    "ADD_DESCRIPTION": True,
+                    "ADD_XMLTV_NS": False,
+                    "GET_MORE_DETAILS": False,
+                    "ADD_CHANNEL_ICON": True,
+                },
+                "KT": {
+                    "MY_CHANNELS": [],
+                    "ENABLED": eval(P.ModelSetting.get('KT'))
+                },
+                "LG": {
+                    "MY_CHANNELS": [],
+                    "ENABLED": eval(P.ModelSetting.get('LG'))
+                },
+                "SK": {
+                    "MY_CHANNELS": [],
+                    "ENABLED": eval(P.ModelSetting.get('SK'))
+                },
+                "DAUM": {
+                    "MY_CHANNELS": [],
+                    "ENABLED": eval(P.ModelSetting.get('DAUM'))
+                },
+                "NAVER": {
+                    "MY_CHANNELS": [],
+                    "ENABLED": eval(P.ModelSetting.get('NAVER'))
+                },
+                "WAVVE": {
+                    "MY_CHANNELS": [],
+                    "ENABLED": eval(P.ModelSetting.get('WAVVE'))
+                },
+                "TVING": {
+                    "MY_CHANNELS": [],
+                    "ENABLED": eval(P.ModelSetting.get('TVING'))
+                },
+                "SPOTV": {
+                    "MY_CHANNELS": [],
+                    "ENABLED": eval(P.ModelSetting.get('SPOTV'))
+                },
+            }
+
+            with open(channel_json_path, 'r', encoding='utf-8') as f:
+                channel_json_data = json.load(f)
+
+                epg2xml_default['KT']['MY_CHANNELS'] = channel_json_data['KT']['CHANNELS']
+                epg2xml_default['LG']['MY_CHANNELS'] = channel_json_data['LG']['CHANNELS']
+                epg2xml_default['SK']['MY_CHANNELS'] = channel_json_data['SK']['CHANNELS']
+                epg2xml_default['DAUM']['MY_CHANNELS'] = channel_json_data['DAUM']['CHANNELS']
+                epg2xml_default['NAVER']['MY_CHANNELS'] = channel_json_data['NAVER']['CHANNELS']
+                epg2xml_default['WAVVE']['MY_CHANNELS'] = channel_json_data['WAVVE']['CHANNELS']
+                epg2xml_default['TVING']['MY_CHANNELS'] = channel_json_data['TVING']['CHANNELS']
+                epg2xml_default['SPOTV']['MY_CHANNELS'] = channel_json_data['SPOTV']['CHANNELS']
+
+                with open(epg2xml_json_path, 'w', encoding='utf-8') as make_json:
+                    txt = json.dumps(epg2xml_default, ensure_ascii=False, indent=2)
+                    txt = re.sub(r",\n\s{8}\"", ', "', txt)
+                    txt = re.sub(r"\s{6}{\s+(.*)\s+}", r"      { \g<1> }", txt)
+                    make_json.write(txt)
+
+            P.logger.info('epg_update_script make xml')
+            subprocess.call(f"epg2xml run --config {epg2xml_json_path} --channelfile {channel_json_path} --xmlfile {xmltv_path}", shell=True)
+            P.logger.info('epg_update_script end')
         except Exception as e: 
             P.logger.exception(f'Exception:{str(e)}')
+
+    @classmethod
+    def createDirectory(cls, directory):
+        try:
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+        except OSError:
+            print("Error: Failed to create the directory.")
