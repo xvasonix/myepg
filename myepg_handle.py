@@ -5,7 +5,6 @@ from .setup import P
 
 import subprocess
 import json
-from collections import OrderedDict
 import re
 
 
@@ -30,7 +29,7 @@ class MYEPG:
             epg2xml_json_path = f"{cur_dir}/file/epg2xml.json"
             xmltv_path = f"{cur_dir}/file/xmltv.xml"
 
-            cls.createDirectory(f"{cur_dir}/file")
+            MYEPG.createDirectory(f"{cur_dir}/file")
 
             P.logger.info('epg_update_script start')
             subprocess.call(f"epg2xml update_channels --channelfile {channel_json_path}", shell=True)  
