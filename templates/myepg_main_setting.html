@@ -17,14 +17,19 @@
       <!-- {{ macros.info_text_go('api_epg', 'EPG', value=arg['api_epg']) }} -->
       {{ macros.info_text_go('api_epgall', 'EPGALL', value=arg['api_epgall']) }}
       {{ macros.m_hr() }}
-      {{ macros.setting_checkbox('KT', 'KT', value=arg['KT']) }}
-      {{ macros.setting_checkbox('LG', 'LG', value=arg['LG']) }}
-      {{ macros.setting_checkbox('SK', 'SK', value=arg['SK']) }}
-      {{ macros.setting_checkbox('DAUM', 'DAUM', value=arg['DAUM']) }}
-      {{ macros.setting_checkbox('NAVER', 'NAVER', value=arg['NAVER']) }}
-      {{ macros.setting_checkbox('WAVVE', 'WAVVE', value=arg['WAVVE']) }}
-      {{ macros.setting_checkbox('TVING', 'TVING', value=arg['TVING']) }}
-      {{ macros.setting_checkbox('SPOTV', 'SPOTV', value=arg['SPOTV']) }}
+      {{ macros.setting_checkbox('main_A1', 'A1사용자', value=arg['main_A1'],  desc=['오라클 A1 사용자는 반드시 ON - WAVVE 소스 요청 제거'] ) }}
+      {{ macros.m_hr() }}
+      {{ macros.setting_checkbox('main_KT', 'KT', value=arg['main_KT']) }}
+      {{ macros.setting_checkbox('main_LG', 'LG', value=arg['main_LG']) }}
+      {{ macros.setting_checkbox('main_SK', 'SK', value=arg['main_SK']) }}
+      {{ macros.setting_checkbox('main_DAUM', 'DAUM', value=arg['main_DAUM']) }}
+      {{ macros.setting_checkbox('main_NAVER', 'NAVER', value=arg['main_NAVER']) }}
+      {{ macros.setting_checkbox('main_WAVVE', 'WAVVE', value=arg['main_WAVVE']) }}
+      {{ macros.setting_checkbox('main_TVING', 'TVING', value=arg['main_TVING']) }}
+      {{ macros.setting_checkbox('main_SPOTV', 'SPOTV', value=arg['main_SPOTV']) }}
+      {{ macros.m_hr() }}
+      {{ macros.setting_buttons([['delete_setting_file_btn', '삭제']], left='EPG2XML 설정 파일 삭제', desc=['file 폴더 삭제 ( Channel.json / epg2xml.json / xmltv.xml )'] ) }}
+
     {{ macros.m_tab_content_end() }}  
     {{ macros.m_tab_content_start('auto', false) }}
       {{ macros.global_setting_scheduler_button(arg['is_include'], arg['is_running']) }}
@@ -34,4 +39,10 @@
 </div>
 </form>
 
+<script type="text/javascript">
+$("body").on('click', '#delete_setting_file_btn', function(e){
+  e.preventDefault();
+  globalSendCommand('delete_setting_file');
+});
+</script>
 {% endblock %}
