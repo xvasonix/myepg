@@ -1,15 +1,13 @@
 
-from datetime import datetime
 import os
 from .setup import P
-
-from support import SupportFile, SupportSubprocess
 
 import subprocess
 import json
 import re
 import copy
 import shutil
+
 
 _epg2xml_default = {
     "GLOBAL": {
@@ -49,6 +47,7 @@ _epg2xml_default = {
     },
 }
 
+
 class MYEPG:
 
     @classmethod
@@ -72,7 +71,7 @@ class MYEPG:
             epg2xml_json_path = f"{cur_dir}/file/epg2xml.json"
             channel_json_path = f"{cur_dir}/file/Channel.json"
             xmltv_xml_path = f"{cur_dir}/file/xmltv.xml"
-
+            
             # cls.deleteDirectory(f"{cur_dir}/file")
             cls.createDirectory(f"{cur_dir}/file")
 
@@ -275,12 +274,10 @@ class MYEPG:
     def updateChannel(cls, config_path, channel_path):
         P.logger.info(f'updateChannel start')
         command = ['epg2xml', 'update_channels', '--config', f'{config_path}', '--channelfile', f'{channel_path}']
-        # subprocess.call(command, shell=True)
-        result = SupportSubprocess.execute_command_return(command, log=False)
-        # result = SupportSubprocess.execute_command_return(command, log=True)
-        logs = result['log'].split('\n')
-        for log in logs:
-            P.logger.info(f'{log}')
+        with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as proc:
+            for line in proc.stderr:
+                P.logger.info(line[24:].strip())
+                
         P.logger.info(f'updateChannel end')
 
 
@@ -288,10 +285,8 @@ class MYEPG:
     def makeXmltv(cls, config_path, channel_path, xml_path):
         P.logger.info(f'makeXmltv start')
         command = ['epg2xml', 'run', '--config', f'{config_path}', '--channelfile', f'{channel_path}', '--xmlfile', f'{xml_path}']
-        # subprocess.call(command, shell=True)
-        result = SupportSubprocess.execute_command_return(command, log=False)
-        # result = SupportSubprocess.execute_command_return(command, log=True)
-        logs = result['log'].split('\n')
-        for log in logs:
-            P.logger.info(f'{log}')
+        with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as proc:
+            for line in proc.stderr:
+                P.logger.info(line[24:].strip())
+
         P.logger.info(f'makeXmltv end')
