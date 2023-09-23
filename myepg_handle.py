@@ -72,19 +72,16 @@ class MYEPG:
             channel_json_path = f"{cur_dir}/file/Channel.json"
             xmltv_xml_path = f"{cur_dir}/file/xmltv.xml"
             
-            # cls.deleteDirectory(f"{cur_dir}/file")
+            cls.deleteDirectory(f"{cur_dir}/file")
             cls.createDirectory(f"{cur_dir}/file")
 
-            # main_A1 에 따라 epg2xml.json 수정/생성
-            if cls.checkEpg2xml(epg2xml_json_path):      
-                P.logger.info('Epg2xml 수정')
-                cls.checkChannel(channel_json_path)
-            else:
-                P.logger.info('Epg2xml 생성')
-
+            cls.checkEpg2xml(epg2xml_json_path)  
             cls.updateChannel(epg2xml_json_path, channel_json_path)
-            cls.setEpg2xml(epg2xml_json_path, channel_json_path)
-            cls.makeXmltv(epg2xml_json_path, channel_json_path, xmltv_xml_path)
+            if cls.checkChannel(channel_json_path)==True:
+                cls.setEpg2xml(epg2xml_json_path, channel_json_path)
+                cls.makeXmltv(epg2xml_json_path, channel_json_path, xmltv_xml_path)
+            else:
+                P.logger.error('No channel.json file')
 
             P.logger.info('epg_update_script end')
         except Exception as e: 
@@ -104,42 +101,45 @@ class MYEPG:
     @classmethod
     def setEpg2xml(cls, path, channel_path):
         try:
-            P.logger.info(f'epg2xml_json start')
+            P.logger.info('epg2xml_json start')
             epg2xml_json = cls.getEpg2xml(path)
             with open(channel_path, 'r', encoding='utf-8') as f:
                 channel_json_data = json.load(f)
                 
                 if 'KT' in channel_json_data.keys():
                     epg2xml_json['KT']['MY_CHANNELS'] = channel_json_data['KT']['CHANNELS']
-                    epg2xml_json['KT']['ENABLED'] = eval(P.ModelSetting.get('main_KT'))
+                    epg2xml_json['KT']['ENABLED'] = P.ModelSetting.get_bool('main_KT')
 
                 if 'LG' in channel_json_data.keys():
                     epg2xml_json['LG']['MY_CHANNELS'] = channel_json_data['LG']['CHANNELS']
-                    epg2xml_json['LG']['ENABLED'] = eval(P.ModelSetting.get('main_LG'))
+                    epg2xml_json['LG']['ENABLED'] = P.ModelSetting.get_bool('main_LG')
 
                 if 'SK' in channel_json_data.keys():
                     epg2xml_json['SK']['MY_CHANNELS'] = channel_json_data['SK']['CHANNELS']
-                    epg2xml_json['SK']['ENABLED'] = eval(P.ModelSetting.get('main_SK'))
+                    epg2xml_json['SK']['ENABLED'] = P.ModelSetting.get_bool('main_SK')
                 
                 if 'DAUM' in channel_json_data.keys():
                     epg2xml_json['DAUM']['MY_CHANNELS'] = channel_json_data['DAUM']['CHANNELS'] 
-                    epg2xml_json['DAUM']['ENABLED'] = eval(P.ModelSetting.get('main_DAUM'))
+                    epg2xml_json['DAUM']['ENABLED'] = P.ModelSetting.get_bool('main_DAUM')
                 
                 if 'NAVER' in channel_json_data.keys():
                     epg2xml_json['NAVER']['MY_CHANNELS'] = channel_json_data['NAVER']['CHANNELS']
-                    epg2xml_json['NAVER']['ENABLED'] = eval(P.ModelSetting.get('main_NAVER'))
+                    epg2xml_json['NAVER']['ENABLED'] = P.ModelSetting.get_bool('main_NAVER')
                 
-                if 'WAVVE' in channel_json_data.keys() and eval(P.ModelSetting.get('main_A1'))==False:
+                if 'WAVVE' in channel_json_data.keys() and P.ModelSetting.get_bool('main_A1')==False:
                     epg2xml_json['WAVVE']['MY_CHANNELS'] = channel_json_data['WAVVE']['CHANNELS']
-                    epg2xml_json['WAVVE']['ENABLED'] = eval(P.ModelSetting.get('main_WAVVE'))
+                    epg2xml_json['WAVVE']['ENABLED'] = P.ModelSetting.get_bool('main_WAVVE')
+                else:
+                    epg2xml_json['WAVVE']['MY_CHANNELS'] = []
+                    epg2xml_json['WAVVE']['ENABLED'] = False
 
                 if 'TVING' in channel_json_data.keys():
                     epg2xml_json['TVING']['MY_CHANNELS'] = channel_json_data['TVING']['CHANNELS']
-                    epg2xml_json['TVING']['ENABLED'] = eval(P.ModelSetting.get('main_TVING'))                
+                    epg2xml_json['TVING']['ENABLED'] = P.ModelSetting.get_bool('main_TVING')               
                 
                 if 'SPOTV' in channel_json_data.keys():
                     epg2xml_json['SPOTV']['MY_CHANNELS'] = channel_json_data['SPOTV']['CHANNELS']
-                    epg2xml_json['SPOTV']['ENABLED'] = eval(P.ModelSetting.get('main_SPOTV'))
+                    epg2xml_json['SPOTV']['ENABLED'] = P.ModelSetting.get_bool('main_SPOTV')
 
             with open(path, 'w', encoding='utf-8') as f:
                 txt = json.dumps(epg2xml_json, ensure_ascii=False, indent=2)
@@ -147,7 +147,7 @@ class MYEPG:
                 txt = re.sub(r"\s{6}{\s+(.*)\s+}", r"      { \g<1> }", txt)
                 f.write(txt)
 
-            P.logger.info(f'epg2xml_json end')
+            P.logger.info('epg2xml_json end')
         except Exception as e: 
             P.logger.exception(f'Exception:{str(e)}')
 
@@ -159,30 +159,45 @@ class MYEPG:
                 # epg2xml 파일이 없으면 기본값 복제해서 생성
                 P.logger.info(f'checkEpg2xml {path} 없음')
                 epg2xml_default = copy.deepcopy(_epg2xml_default)
-                epg2xml_default['WAVVE']['ENABLED'] = not eval(P.ModelSetting.get('main_A1'))
-                cls.makeEpg2xml(path, epg2xml_default)
+                epg2xml_default['KT']['ENABLED'] = P.ModelSetting.get_bool('main_KT')
+                epg2xml_default['LG']['ENABLED'] = P.ModelSetting.get_bool('main_LG')
+                epg2xml_default['SK']['ENABLED'] = P.ModelSetting.get_bool('main_SK')
+                epg2xml_default['DAUM']['ENABLED'] = P.ModelSetting.get_bool('main_DAUM')
+                epg2xml_default['NAVER']['ENABLED'] = P.ModelSetting.get_bool('main_NAVER')
 
-                return False
+                if P.ModelSetting.get_bool('main_A1') == False:
+                    epg2xml_default['WAVVE']['ENABLED'] = P.ModelSetting.get_bool('main_WAVVE')
+                else:
+                    epg2xml_default['WAVVE']['ENABLED'] = False
+
+                epg2xml_default['TVING']['ENABLED'] = P.ModelSetting.get_bool('main_TVING')
+                epg2xml_default['SPOTV']['ENABLED'] = P.ModelSetting.get_bool('main_SPOTV')
+
+                cls.makeEpg2xml(path, epg2xml_default)
             else: 
                 # 각 소스 ENABLED 을 True 로 해야 Channel.json 채널 목록 불러올 수 있음 
                 P.logger.info(f'checkEpg2xml {path} 수정')
                 epg2xml_json = cls.getEpg2xml(path)
-                epg2xml_json['KT']['ENABLED'] = True
-                epg2xml_json['LG']['ENABLED'] = True
-                epg2xml_json['SK']['ENABLED'] = True
-                epg2xml_json['DAUM']['ENABLED'] = True
-                epg2xml_json['NAVER']['ENABLED'] = True
-                epg2xml_json['WAVVE']['ENABLED'] = not eval(P.ModelSetting.get('main_A1'))       
-                epg2xml_json['TVING']['ENABLED'] = True
-                epg2xml_json['SPOTV']['ENABLED'] = True
+                epg2xml_json['KT']['ENABLED'] = P.ModelSetting.get_bool('main_KT')
+                epg2xml_json['LG']['ENABLED'] = P.ModelSetting.get_bool('main_LG')
+                epg2xml_json['SK']['ENABLED'] = P.ModelSetting.get_bool('main_SK')
+                epg2xml_json['DAUM']['ENABLED'] = P.ModelSetting.get_bool('main_DAUM')
+                epg2xml_json['NAVER']['ENABLED'] = P.ModelSetting.get_bool('main_NAVER')
+
+                if P.ModelSetting.get_bool('main_A1') == False:
+                    epg2xml_json['WAVVE']['ENABLED'] = P.ModelSetting.get_bool('main_WAVVE')
+                else:
+                    epg2xml_json['WAVVE']['ENABLED'] = False
+
+                epg2xml_json['TVING']['ENABLED'] = P.ModelSetting.get_bool('main_TVING')
+                epg2xml_json['SPOTV']['ENABLED'] = P.ModelSetting.get_bool('main_SPOTV')
 
                 with open(path, 'w', encoding='utf-8') as f:
                     txt = json.dumps(epg2xml_json, ensure_ascii=False, indent=2)
                     f.write(txt)
 
-                return True
         except Exception as e: 
-            P.logger.exception(f'Exception:{str(e)}')
+            P.logger.exception(f'Exception: {str(e)}')
 
 
     @classmethod
@@ -192,34 +207,20 @@ class MYEPG:
                 channel_json = json.load(f)
                 return channel_json
         except Exception as e: 
-            P.logger.exception(f'Exception:{str(e)}')
+            P.logger.exception(f'Exception: {str(e)}')
 
-            
+
     @classmethod
     def checkChannel(cls, path):
-        try: 
-            P.logger.info(f'checkChannel start')
-            if os.path.exists(path):  
-                # Channel 파일 수정X 그냥 삭제 하고 다시 받게 끔 
-                P.logger.info(f'checkChannel {path} 있음')
-                # 채널 파일이 있고 A1 사용자면 WAVVE 제거
-                channel_json = cls.getChannel(path)
-                if 'WAVVE' in channel_json.keys():
-                    if eval(P.ModelSetting.get('main_A1')):
-                        # P.logger.info(f'WAVVE 소스 O - A1 사용자 - 삭제')  
-                        cls.deleteFile(path)
-                    # else:
-                    #     P.logger.info(f'WAVVE 소스 O - 일반 사용자 - 유지') 
-                else:
-                    #웨이브 키가 없고 일반 유저 - 삭제 
-                    if not eval(P.ModelSetting.get('main_A1')): 
-                        # P.logger.info(f'WAVVE 소스 X - 일반 사용자 - 삭제') 
-                        cls.deleteFile(path)
-                    # else:
-                    #     P.logger.info(f'WAVVE 소스 X - A1유저 - 유지')     
-            P.logger.info(f'checkChannel end')
-        except Exception as e: 
-            P.logger.exception(f'Exception:{str(e)}')
+        try:
+            if os.path.exists(path):
+                # P.logger.info(f'checkChannel {path} true')
+                return True
+            else:
+                # P.logger.info(f'checkChannel {path} false')
+                return False
+        except Exception as e:
+            P.logger.exception(f"Exception: {str(e)}")
 
 
     @classmethod
@@ -257,9 +258,13 @@ class MYEPG:
 
     @classmethod
     def makeEpg2xml(cls, config_path, data_json):
-        P.logger.info(f"init - user_epg2xml : {config_path} - main_A1 값 : {eval(P.ModelSetting.get('main_A1'))}")
+        P.logger.info(f"init - user_epg2xml : {config_path} - main_A1 값 : {P.ModelSetting.get_bool('main_A1')}")
         try:
-            # subprocess.call(f"epg2xml run --config {epg2xml_json_path}", shell=True)  
+            # subprocess.call(f"epg2xml run --config {config_path}", shell=True)  
+            # command = ['epg2xml', 'run', '--config', f'{config_path}']
+            # with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as proc:
+            #     for line in proc.stderr:
+            #         cls.print_log(line)
             with open(config_path, 'w', encoding='utf-8') as f:
                 txt = json.dumps(data_json, ensure_ascii=False, indent=2)
                 txt = re.sub(r",\n\s{8}\"", ', "', txt)
@@ -269,24 +274,36 @@ class MYEPG:
             P.logger.exception("Error: Failed to create the directory.")
 
 
-    # 첫 실행시에 file/channel.json 만들어짐
     @classmethod
     def updateChannel(cls, config_path, channel_path):
-        P.logger.info(f'updateChannel start')
+        P.logger.info('updateChannel start')
         command = ['epg2xml', 'update_channels', '--config', f'{config_path}', '--channelfile', f'{channel_path}']
         with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as proc:
             for line in proc.stderr:
-                P.logger.info(line[24:].strip())
-                
-        P.logger.info(f'updateChannel end')
+                cls.print_log(line)
+
+        P.logger.info('updateChannel end')
 
 
     @classmethod
     def makeXmltv(cls, config_path, channel_path, xml_path):
-        P.logger.info(f'makeXmltv start')
+        P.logger.info('makeXmltv start')
         command = ['epg2xml', 'run', '--config', f'{config_path}', '--channelfile', f'{channel_path}', '--xmlfile', f'{xml_path}']
         with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as proc:
             for line in proc.stderr:
-                P.logger.info(line[24:].strip())
+                cls.print_log(line)
 
-        P.logger.info(f'makeXmltv end')
+        P.logger.info('makeXmltv end')
+
+
+    @classmethod
+    def print_log(cls, line):
+        pattern = "([0-9]+)/*([0-9]+)/*([0-9]+)\s*([0-9]+):*([0-9]+):*([0-9]+)\s"
+        try:
+            # P.logger.error(line[:].strip()) 
+            if re.search(pattern, line) == None:
+                P.logger.error(line[:].strip())                 
+            else:           
+                P.logger.info(line[29:].strip())        
+        except Exception as e:
+            P.logger.exception(f"Error: {str(e)}")
