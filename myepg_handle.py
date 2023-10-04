@@ -261,7 +261,7 @@ class MYEPG:
         P.logger.info(f"init - user_epg2xml : {config_path} - main_A1 값 : {P.ModelSetting.get_bool('main_A1')}")
         try:
             # subprocess.call(f"epg2xml run --config {config_path}", shell=True)  
-            # command = ['epg2xml', 'run', '--config', f'{config_path}']
+            # command = ['epg2xml', 'run', '--config', config_path]
             # with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as proc:
             #     for line in proc.stderr:
             #         cls.print_log(line)
@@ -277,9 +277,9 @@ class MYEPG:
     @classmethod
     def updateChannel(cls, config_path, channel_path):
         P.logger.info('updateChannel start')
-        os.chdir(f"{os.path.dirname(__file__)}/epg2xml")
-        command = ['python', '-m', 'epg2xml', 'update_channels', '--config', f'{config_path}', '--channelfile', f'{channel_path}']
-        # command = ['epg2xml', 'update_channels', '--config', f'{config_path}', '--channelfile', f'{channel_path}']
+        os.chdir(f'{os.path.dirname(__file__)}/epg2xml')
+        command = ['python', '-m', 'epg2xml', 'update_channels', '--config', config_path, '--channelfile', channel_path]
+        # command = ['epg2xml', 'update_channels', '--config', config_path, '--channelfile', channel_path]
         with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as proc:
             for line in proc.stderr:
                 cls.print_log(line)
@@ -290,9 +290,9 @@ class MYEPG:
     @classmethod
     def makeXmltv(cls, config_path, channel_path, xml_path):
         P.logger.info('makeXmltv start')
-        os.chdir(f"{os.path.dirname(__file__)}/epg2xml")
-        command = ['python', '-m', 'epg2xml', 'run', '--config', f'{config_path}', '--channelfile', f'{channel_path}', '--xmlfile', f'{xml_path}']
-        # command = ['epg2xml', 'run', '--config', f'{config_path}', '--channelfile', f'{channel_path}', '--xmlfile', f'{xml_path}']
+        os.chdir(f'{os.path.dirname(__file__)}/epg2xml')
+        command = ['python', '-m', 'epg2xml', 'run', '--config', config_path, '--channelfile', channel_path, '--xmlfile', xml_path]
+        # command = ['epg2xml', 'run', '--config', config_path', '--channelfile', channel_path, '--xmlfile', xml_path]
         with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as proc:
             for line in proc.stderr:
                 cls.print_log(line)
