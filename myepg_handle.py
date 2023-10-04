@@ -71,7 +71,7 @@ class MYEPG:
             epg2xml_json_path = f"{cur_dir}/file/epg2xml.json"
             channel_json_path = f"{cur_dir}/file/Channel.json"
             xmltv_xml_path = f"{cur_dir}/file/xmltv.xml"
-            
+
             cls.deleteDirectory(f"{cur_dir}/file")
             cls.createDirectory(f"{cur_dir}/file")
 
@@ -277,7 +277,9 @@ class MYEPG:
     @classmethod
     def updateChannel(cls, config_path, channel_path):
         P.logger.info('updateChannel start')
-        command = ['epg2xml', 'update_channels', '--config', f'{config_path}', '--channelfile', f'{channel_path}']
+        os.chdir(f"{os.path.dirname(__file__)}/epg2xml")
+        command = ['python', '-m', 'epg2xml', 'update_channels', '--config', f'{config_path}', '--channelfile', f'{channel_path}']
+        # command = ['epg2xml', 'update_channels', '--config', f'{config_path}', '--channelfile', f'{channel_path}']
         with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as proc:
             for line in proc.stderr:
                 cls.print_log(line)
@@ -288,7 +290,9 @@ class MYEPG:
     @classmethod
     def makeXmltv(cls, config_path, channel_path, xml_path):
         P.logger.info('makeXmltv start')
-        command = ['epg2xml', 'run', '--config', f'{config_path}', '--channelfile', f'{channel_path}', '--xmlfile', f'{xml_path}']
+        os.chdir(f"{os.path.dirname(__file__)}/epg2xml")
+        command = ['python', '-m', 'epg2xml', 'run', '--config', f'{config_path}', '--channelfile', f'{channel_path}', '--xmlfile', f'{xml_path}']
+        # command = ['epg2xml', 'run', '--config', f'{config_path}', '--channelfile', f'{channel_path}', '--xmlfile', f'{xml_path}']
         with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as proc:
             for line in proc.stderr:
                 cls.print_log(line)
