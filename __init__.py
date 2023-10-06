@@ -5,7 +5,7 @@ from .setup import P
 
 home_dir = os.path.dirname(__file__)
 package_dir = os.path.join(home_dir, 'epg2xml')
-
+P.logger.debug(f'epg2xml package directory : {package_dir}')
 
 try:
     if os.path.exists(package_dir) and os.path.exists(os.path.join(package_dir, '.git')):
@@ -16,10 +16,14 @@ try:
         ret = subprocess.run(command, capture_output=True, text=True)
         P.logger.debug(ret.stdout.rstrip())
         P.logger.info('epg2xml is installed')
-        
+    else:
+        P.logger.info('epg2xml is not installed')
+        os.system(f"git clone https://github.com/epg2xml/epg2xml.git {package_dir}")
+        P.logger.info('epg2xml package installation completed')
 except Exception as e:
     P.logger.exception(f'epg2xml is not installed {str(e)}')
     os.system(f"git clone https://github.com/epg2xml/epg2xml.git {package_dir}")
+    P.logger.info('epg2xml package installation completed')
     # os.system(f"pip install {cur_dir}")
 
 
