@@ -1,9 +1,9 @@
-from datetime import datetime
 from tool import ToolUtil
-from flask import Response
+from flask import send_file, jsonify, render_template
 from .setup import *
 from .myepg_handle import MYEPG
-import os 
+import os, traceback
+
 
 class ModuleMain(PluginModuleBase):
 
@@ -47,8 +47,8 @@ class ModuleMain(PluginModuleBase):
     def process_api(self, sub, req):
         try:
             if sub == 'epgall':
-                data = MYEPG.get_epgall()
-                return Response(data, headers={'Content-Type': 'text/xml; charset=utf-8'})
+                xmltv_path = os.path.join(os.path.dirname(__file__), 'file', 'xmltv.xml')
+                return send_file(xmltv_path, mimetype='application/xml')
         except Exception as e: 
             P.logger.error(f'Exception:{str(e)}')
             P.logger.error(traceback.format_exc())

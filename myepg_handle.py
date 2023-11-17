@@ -8,7 +8,6 @@ import re
 import copy
 import shutil
 
-
 _epg2xml_default = {
     "GLOBAL": {
         "ENABLED": True,
@@ -49,18 +48,6 @@ _epg2xml_default = {
 
 
 class MYEPG:
-
-    @classmethod
-    def get_epgall(cls):
-        try:
-            import xml.etree.ElementTree as ET    
-            xmltv_path = os.path.join(os.path.dirname(__file__), 'file', 'xmltv.xml')
-            tree = ET.parse(xmltv_path)
-            root = tree.getroot()
-            return ET.tostring(root, encoding='utf-8')
-        except Exception as e:
-            P.logger.exception(f'error return xmltv.xml : {str(e)}')
-
 
     @classmethod
     def epg_update_script(cls):
