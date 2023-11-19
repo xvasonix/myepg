@@ -1,0 +1,173 @@
+match_channels:
+    - {name: [KBS1, 1TV], wavve: KBS 1TV}
+    - {name: [KBS2, 2TV], wavve: KBS 2TV}
+    - {name: [EBS1, EBS], wavve: EBS 1}
+    - {name: [EBS2], wavve: EBS 2}
+    # - {name: OBS 경인TV, wavve: [OBS]}
+
+    - {name: [TV 조선, TV조선], wavve: TV CHOSUN}
+    - {name: [TVCHOSUN2, TV CHOSUN 2, TV조선2, HD TV CHOSUN2], wavve: TV CHOSUN2}
+    
+    - {name: [CH W], wavve: 채널W}
+    - {name: [K STAR, K star, K스타], wavve: k-star}
+    - {name: [MBN플러스, MBN Plus, MBN+], wavve: MBN 플러스}  
+    - {name: [채널A플러스, 채널A+], wavve: 채널A 플러스}
+
+    - {name: [KBS 드라마, KBS드라마, HD KBS드라마], wavve: KBS Drama}   
+    - {name: [KBS joy, KBS Joy, HD KBS JOY, KBS조이], wavve: KBS JOY}
+    - {name: [KBS joy, KBS Joy, HD KBS JOY, KBS조이], wavve: KBS KIDS}
+
+    - {name: [MBC 드라마넷, MBC 드라마], wavve: MBC Drama}
+
+    - {name: [SBS fun E, HD SBS funE], wavve: SBS funE}
+    - {name: [SBS 플러스, HD SBS Plus], wavve: SBS Plus}
+    - {name: [SBS F!L, SBS필 UHD], wavve: SBS Fil}
+    - {name: [SBS MTV], wavve: SBS M}
+
+    - {name: [EDGE TV, 엣지TV], wavve: EDGETV}
+    - {name: [FUN TV, 펀TV], wavve: FUNTV}
+    
+    - {name: [DW-TV Asia+, TV asia Plus, TVasiaPlus], wavve: TVasia Plus}
+    - {name: [Smile TV Plus], wavve: SmileTV Plus}
+    - {name: [WeLike], wavve: 위라이크}
+       
+  
+    - {name: [SPOTV ON 유료], wavve: [스포티비]}
+    - {name: [SPOTV ON 2 유료], wavve: [SPOTV ON2]}
+    
+    # - {name: SBS스포츠, wavve: [SBS Sports]}
+    # - {name: KBS N 스포츠, wavve: [KBSN SPORTS]}
+    # - {name: JTBC GOLF, wavve: [JTBC골프]}
+    # - {name: JTBC GOLF & SPORTS, wavve: [JTBC골프앤스포츠]}
+
+    # - {name: SBS골프, wavve: [SBS Golf]}
+    # - {name: IB SPORTS, wavve: [IB sports]}
+
+
+
+    - {name: [아시아N, Asia N], wavve: AsiaN}
+
+    # - {name: [PLAYY웰메이드], wavve: PLAYY 웰메이드 영화}  
+    # - {name: [PLAYY프리미엄], wavve: PLAYY 프리미엄 영화}
+    # - {name: [PLAYY액션], wavve: PLAYY 액션영화}
+    # - {name: [PLAYY힐링], wavve: PLAYY 힐링 영화} 
+    # - {name: [PLAYY중국드라마], wavve: PLAYY 중국 드라마} 
+ 
+
+
+    # kbs, sbs, mbc (기타)
+    # 139     KBS 	1TV 		
+    # 140 	KBS 	2TV 		
+    # 141 	KBS 	KBS WORLD 		
+    # 142 	KBS 	KBS NEWS D 		
+    # 143 	KBS 	KBS Drama 		
+    # 144 	KBS 	KBS Joy 		
+    # 145 	KBS 	KBS Story 		
+    # 146 	KBS 	KBS LIFE 		
+    # 147 	KBS 	KBS KIDS 		
+    # 148 	KBS 	독도 		
+    # 149 	KBS 	📻1라디오 		
+    # 150 	KBS 	📻2라디오 		
+    # 151 	KBS 	📻3라디오 		
+    # 152 	KBS 	📻1FM 		
+    # 153 	KBS 	📻2FM 		
+    # 154 	KBS 	📻한민족방송 		
+    # 155 	KBS 	📻KBS WORLD MULTILINGUAL 		
+    # 156 	KBS 	📻KBS WORLD ENGLISH 		
+    # 157 	MBC 	MBC 	테마기행 길(재) 	
+    # 158 	MBC 	MBC every1 	어서와~ 한국은 처음이지? 266회 	
+    # 159 	MBC 	MBC DRAMA 	세 번째 결혼 12회 	
+    # 160 	MBC 	MBC M 	무한도전 290회 	
+    # 161 	MBC 	MBC ON 	인어아가씨 202회 	
+    # 162 	MBC 	📻표준FM 	건강한 아침 김초롱입니다 	
+    # 163 	MBC 	📻FM4U 	K팝 투데이 	
+    # 164 	MBC 	📻올댓뮤직 	음악의 발견 1부 	
+    # 165 	SBS 	SBS 	SBS 특선 다큐멘터리 	
+    # 166 	SBS 	📻POWER FM 	이인권의 펀펀투데이 	
+    # 167 	SBS 	📻LOVE FM 	최영주의 아침편지 	
+    # 168 	SBS 	POWER FM (보는 라디오) 	이인권의 펀펀투데이 	
+    # 169 	SBS 	LOVE FM (보는 라디오) 	🔒최영주의 아침편지 	
+    # 170 	SBS 	SBS Plus 	수학 없는 수학여행 	
+    # 171 	SBS 	SBS funE 	수학 없는 수학여행 	
+    # 172 	SBS 	SBS Sports 	하나카드 PBA 챔피언십 23-24 	
+    # 173 	SBS 	SBS Golf 	THE SHOT 	
+    # 174 	SBS 	SBS Golf2 	THE SHOT 	
+    # 175 	SBS 	SBS BIZ 	빅퀘스천 	
+    # 176 	SBS 	SBS M 	HITS : K-POP 	
+    # 177 	SBS 	K POP 	HOT TRACK #2 	
+    # 178 	SBS 	📻GorealraM 	Love 20 (재)
+
+    # - {name: [K POP], wavve: THE K-POP}
+
+    - {name: [어린이TV], wavve: 대교어린이TV}
+    - {name: [애니맥스], wavve: Animax}
+    - {name: [투니버스], wavve: Tooniverse}
+    - {name: [AniBox, 애니박스], wavve: ANIBOX}
+    - {name: [애니원], wavve: ANIONE}
+    - {name: [라이프타임], wavve: LIFETIME}
+
+    # - {name: [EBS키즈, EBS KIDS], wavve: EBS 키즈}
+    - {name: [bravo kids], wavve: 브라보키즈}
+    - {name: [K스타], wavve: k-star}  
+    - {name: [CTS 기독교TV, CTS], wavve: CTS기독교TV}  
+                
+
+    - {name: [국회방송(NATV)], wavve: 국회방송}
+
+    # - {name: MGTV, wavve: [MG소비자TV]}
+
+    - {name: [BTN 불교TV], wavve: BTN}
+
+    - {name: [MTN], wavve: 머니투데이방송}
+
+    - {name: [연합뉴스경제 TV, 연합뉴스경제TV], wavve: 연합뉴스 경제TV}
+
+    # - {name: CJ온스타일, wavve: [CJ ONSTYLE]}
+    # - {name: CJ온스타일플러스, wavve: [CJ온스타일＋, CJ ONSTYLE＋]}
+
+    - {name: [GS샵], wavve: GS SHOP}
+    - {name: [HD NS홈쇼핑], wavve: NS홈쇼핑}
+
+    - {name: [SK stoa], wavve: SK스토아}
+    - {name: [kt알파 쇼핑], wavve: KT알파 쇼핑}
+
+    - {name: [공영쇼핑], wavve: 공영홈쇼핑}
+
+    # - {name: 홈&쇼핑, wavve: [홈앤쇼핑]}
+    # - {name: W 쇼핑, wavve: [W쇼핑]}
+    - {name: [현대홈쇼핑+Shop, HD 현대홈쇼핑], wavve: 현대홈쇼핑+샵}
+    - {name: [GS마이샵], wavve: GS MY SHOP}    
+    # - {name: [NS Shop+, NS SHOP＋], wavve: NS SHOP+}
+    - {name: [신세계쇼핑], wavve: 신세계라이브쇼핑}
+    - {name: [롯데OneTV], wavve: 롯데홈쇼핑 ONETV}
+
+    - {name: [빌리어즈TV, 빌리어즈티비], wavve: Billiards TV}
+    - {name: [피싱TV], wavve: FISHING TV}
+
+    - {name: [EBS English(중학3)], wavve: EBS English}
+    - {name: [EBS+1, EBS플러스1(고등)], wavve: EBS플러스1}
+    - {name: [EBS+2, EBS플러스2(초등1,2)], wavve: EBS플러스2}
+
+    - {name: [channel J], wavve: 채널J}
+    - {name: [디스커버리, 디스커버리채널, 디스커버리 채널, Discovery Channel], wavve: Discovery}
+    - {name: [히스토리채널, 히스토리], wavve: HISTORY}
+    # - {name: NAT GEO WILD, wavve: [Nat Geo Wild]}
+    # - {name: BBC World 2, wavve: [BBC WN, BBC World News]}
+    # - {name: CNN Int’l, wavve: [CNN International, CNN Int'l]}
+
+    # 라디오
+    # - {name: KBS 클래식 FM, wavve: [1FM]}
+    # - {name: KBS CoolFM, wavve: [2FM]}
+    # - {name: MBCFM4U, wavve: [FM4U]}
+    # - {name: MBC표준FM, wavve: [표준FM]}
+    # - {name: SBS파워FM, wavve: [POWER FM]}
+    # - {name: SBS러브FM, wavve: [LOVE FM]}
+    # - {name: TBSFM, wavve: [TBS FM LIVE]}
+    # - {name: EBS교육방송, wavve: [EBS FM]}
+    # - {name: KBS1R, wavve: [KBS1RADIO, 1라디오, KBS 1R]}    
+    # - {name: KBS2R, wavve: [2라디오, KBS 2R]}
+    # - {name: KBS3R, wavve: [3라디오, KBS 3R]}
+    # - {name: KBSWorldRadio, wavve: [KBS World Radio, KBS WORLD Radio CH1, KBS WORLD Radio CH2]}
+    # - {name: KBS한민족, wavve: [한민족방송, KBS 한민족]}
+    # - {name: SBS 고릴라라디오 M, wavve: [GorealraM]}
+    # - {name: YTNNewsFM, wavve: [YTN 라디오]}
