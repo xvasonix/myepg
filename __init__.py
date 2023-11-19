@@ -3,8 +3,7 @@ import subprocess
 from .setup import P
 
 
-home_dir = os.path.dirname(__file__)
-package_dir = os.path.join(home_dir, 'epg2xml')
+package_dir = os.path.join(os.path.dirname(__file__), 'epg2xml')
 P.logger.debug(f'epg2xml package directory : {package_dir}')
 
 try:
