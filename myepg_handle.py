@@ -8,11 +8,23 @@ import re
 import copy
 import shutil
 
+import xml.etree.ElementTree as ET
+from copy import deepcopy
+from pathlib import Path
+import yaml
+
+try:
+    from yaml import CLoader as Loader
+except ImportError:
+    from yaml import Loader
+
+
 _epg2xml_default = {
     "GLOBAL": {
         "ENABLED": True,
         "FETCH_LIMIT": 2,
         "ID_FORMAT": "{ServiceId}.{Source.lower()}",
+        # "ID_FORMAT": "{Name}",
         "ADD_REBROADCAST_TO_TITLE": False,
         "ADD_EPNUM_TO_TITLE": True,
         "ADD_DESCRIPTION": True,
@@ -50,6 +62,52 @@ _epg2xml_default = {
 
 class MYEPG:
 
+
+    @classmethod
+    def load_yaml(cls, file):
+        try:
+            return yaml.load(file, Loader=Loader)
+        except TypeError:
+            with open(file, "r", encoding="utf-8") as fp:
+                return yaml.load(fp, Loader=Loader)
+
+
+    @classmethod
+    def insert(cls, channel, channels):
+        text = channel.find("display-name").text
+        # P.logger.debug(text)
+        for match in channels:
+            for m in match['name']:
+                # P.logger.debug(match['name'])
+                if m == text:
+                    P.logger.debug(f"display-name 새로 추가 : {match['wavve']}")
+                    name = ET.Element("display-name")
+                    name.text = match['wavve']
+                    channel.insert(0, name)
+
+
+    @classmethod
+    def match_channels(cls):
+        try:
+            file = Path(os.path.dirname(__file__)).joinpath("match_channels.yaml")
+            prefs = cls.load_yaml(file)
+            # P.logger.debug(prefs)
+            match_channels = deepcopy(prefs['match_channels'])
+            
+            xmltv_path = os.path.join(os.path.dirname(__file__), 'file', 'xmltv.xml')
+            tree = ET.parse(xmltv_path)
+            root = tree.getroot()
+            [cls.insert(c, match_channels) for c in root.findall("channel")]
+
+            with open(xmltv_path, 'wb') as f:
+                f.write('<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE tv SYSTEM "xmltv.dtd">\n\n'.encode('utf8'))
+                tree = ET.ElementTree(root)
+                ET.indent(tree, space="\t", level=0)
+                tree.write(f, encoding="utf-8")
+        except Exception as e:
+            P.logger.exception(f"xmltv match_channels : {e}")
+
+
     @classmethod
     def epg_update_script(cls):
         try:
@@ -71,6 +129,8 @@ class MYEPG:
             else:
                 P.logger.error('No channel.json file')
 
+            # if P.ModelSetting.get_bool('main_match'):
+            cls.match_channels()
             P.logger.info('epg_update_script end')
         except Exception as e: 
             P.logger.exception(f'Exception:{str(e)}')
