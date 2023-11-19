@@ -21,7 +21,7 @@ match_channels:
 
     - {name: [SBS fun E, HD SBS funE], wavve: SBS funE}
     - {name: [SBS 플러스, HD SBS Plus], wavve: SBS Plus}
-    - {name: [SBS F!L, SBS필 UHD], wavve: SBS Fil}
+    - {name: [SBS Fil, SBS필 UHD], wavve: SBS F!L}
     - {name: [SBS MTV], wavve: SBS M}
 
     - {name: [EDGE TV, 엣지TV], wavve: EDGETV}
