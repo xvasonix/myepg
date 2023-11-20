@@ -75,15 +75,24 @@ class MYEPG:
     @classmethod
     def insert(cls, channel, channels):
         text = channel.find("display-name").text
-        # P.logger.debug(text)
+        # print(text)
         for match in channels:
-            for m in match['name']:
-                # P.logger.debug(match['name'])
-                if m == text:
-                    P.logger.debug(f"display-name 새로 추가 : {match['wavve']}")
-                    name = ET.Element("display-name")
-                    name.text = match['wavve']
-                    channel.insert(0, name)
+            if text.lower() != match['wavve'].lower():
+                for m in match['name']:
+                    # print(m, text)
+                    if m.lower() == text.lower():
+                        # print(f"{m}, {text}, {match['wavve']}")
+                        name = ET.Element("display-name")
+                        name.text = match['wavve']
+                        channel.insert(0, name)
+                        if (m.lower() == 'KBS1'.lower()) or (name.text.lower() == 'KBS1'.lower()):
+                            name_1tv = ET.Element("display-name")
+                            name_1tv.text = '1TV'
+                            channel.insert(1, name_1tv)
+                        if (m.lower() == 'KBS2'.lower()) or (name.text.lower() == 'KBS2'.lower()):
+                            name_2tv = ET.Element("display-name")
+                            name_2tv.text = '2TV'
+                            channel.insert(1, name_2tv)
 
 
     @classmethod
