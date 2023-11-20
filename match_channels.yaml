@@ -9,13 +9,15 @@ match_channels:
     - {name: [TVCHOSUN2, TV CHOSUN 2, TV조선2, HD TV CHOSUN2], wavve: TV CHOSUN2}
     
     - {name: [CH W], wavve: 채널W}
-    - {name: [K STAR, K star, K스타], wavve: k-star}
+    # - {name: [K STAR, K star, K스타], wavve: k-star}
+    - {name: [K STAR, K스타], wavve: k-star}
     - {name: [MBN플러스, MBN Plus, MBN+], wavve: MBN 플러스}  
     - {name: [채널A플러스, 채널A+], wavve: 채널A 플러스}
 
     - {name: [KBS 드라마, KBS드라마, HD KBS드라마], wavve: KBS Drama}   
     - {name: [KBS joy, KBS Joy, HD KBS JOY, KBS조이], wavve: KBS JOY}
-    - {name: [KBS joy, KBS Joy, HD KBS JOY, KBS조이], wavve: KBS KIDS}
+    # - {name: [HD KBS JOY, KBS조이], wavve: KBS JOY}
+    - {name: [KBS키즈], wavve: KBS KIDS}
 
     - {name: [MBC 드라마넷, MBC 드라마], wavve: MBC Drama}
 
@@ -32,18 +34,17 @@ match_channels:
     - {name: [WeLike], wavve: 위라이크}
        
   
-    - {name: [SPOTV ON 유료], wavve: [스포티비]}
-    - {name: [SPOTV ON 2 유료], wavve: [SPOTV ON2]}
+    - {name: [SPOTV ON 유료, 스포티비 온 1], wavve: SPOTV}
+    - {name: [SPOTV ON 2 유료, 스포티비 온 2], wavve: SPOTV ON2}
     
-    # - {name: SBS스포츠, wavve: [SBS Sports]}
-    # - {name: KBS N 스포츠, wavve: [KBSN SPORTS]}
-    # - {name: JTBC GOLF, wavve: [JTBC골프]}
-    # - {name: JTBC GOLF & SPORTS, wavve: [JTBC골프앤스포츠]}
+    # - {name: SBS스포츠, wavve: SBS Sports}
+    # - {name: KBS N 스포츠, wavve: KBSN SPORTS}
+    # - {name: JTBC GOLF, wavve: JTBC골프}
+    # - {name: [JTBC골프앤스포츠], wavve: JTBC GOLF & SPORTS}
+    # - {name: [스포티비 골프 앤 헬스], wavve: SPOTV Golf & Health}
 
-    # - {name: SBS골프, wavve: [SBS Golf]}
-    # - {name: IB SPORTS, wavve: [IB sports]}
-
-
+    # - {name: SBS골프, wavve: SBS Golf}
+    # - {name: IB SPORTS, wavve: IB sports}
 
     - {name: [아시아N, Asia N], wavve: AsiaN}
 
@@ -52,8 +53,6 @@ match_channels:
     # - {name: [PLAYY액션], wavve: PLAYY 액션영화}
     # - {name: [PLAYY힐링], wavve: PLAYY 힐링 영화} 
     # - {name: [PLAYY중국드라마], wavve: PLAYY 중국 드라마} 
- 
-
 
     # kbs, sbs, mbc (기타)
     # 139     KBS 	1TV 		
@@ -102,11 +101,11 @@ match_channels:
     - {name: [어린이TV], wavve: 대교어린이TV}
     - {name: [애니맥스], wavve: Animax}
     - {name: [투니버스], wavve: Tooniverse}
-    - {name: [AniBox, 애니박스], wavve: ANIBOX}
+    - {name: [애니박스], wavve: ANIBOX}
     - {name: [애니원], wavve: ANIONE}
     - {name: [라이프타임], wavve: LIFETIME}
 
-    # - {name: [EBS키즈, EBS KIDS], wavve: EBS 키즈}
+    - {name: [EBS키즈, EBS KIDS], wavve: EBS 키즈}
     - {name: [bravo kids], wavve: 브라보키즈}
     - {name: [K스타], wavve: k-star}  
     - {name: [CTS 기독교TV, CTS], wavve: CTS기독교TV}  
@@ -129,7 +128,7 @@ match_channels:
     - {name: [HD NS홈쇼핑], wavve: NS홈쇼핑}
 
     - {name: [SK stoa], wavve: SK스토아}
-    - {name: [kt알파 쇼핑], wavve: KT알파 쇼핑}
+    # - {name: [kt알파 쇼핑], wavve: KT알파 쇼핑}
 
     - {name: [공영쇼핑], wavve: 공영홈쇼핑}
 
@@ -151,9 +150,9 @@ match_channels:
     - {name: [channel J], wavve: 채널J}
     - {name: [디스커버리, 디스커버리채널, 디스커버리 채널, Discovery Channel], wavve: Discovery}
     - {name: [히스토리채널, 히스토리], wavve: HISTORY}
-    # - {name: NAT GEO WILD, wavve: [Nat Geo Wild]}
-    # - {name: BBC World 2, wavve: [BBC WN, BBC World News]}
-    # - {name: CNN Int’l, wavve: [CNN International, CNN Int'l]}
+    # - {name: NAT GEO WILD, wavve: Nat Geo Wild}
+    # - {name: BBC World 2, wavve: BBC WN, BBC World News}
+    # - {name: CNN Int’l, wavve: CNN International, CNN Int'l}
 
     # 라디오
     # - {name: KBS 클래식 FM, wavve: [1FM]}
