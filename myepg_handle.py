@@ -296,10 +296,10 @@ class MYEPG:
     @classmethod
     def disable_wavve(cls, path):
         epg2xml_json = cls.getEpg2xml(path)
-        if not P.ModelSetting.get_bool('main_A1'):
-            return 
-        # epg2xml_json['WAVVE']['MY_CHANNELS'] = []
-        epg2xml_json['WAVVE']['ENABLED'] = False
+        if P.ModelSetting.get_bool('main_A1'):
+            epg2xml_json['WAVVE']['ENABLED'] = False
+        else:
+            epg2xml_json['WAVVE']['ENABLED'] = True
 
         with open(path, 'w', encoding='utf-8') as f:
             txt = json.dumps(epg2xml_json, ensure_ascii=False, indent=2)
