@@ -15,11 +15,11 @@ match_channels:
     - {name: [채널A플러스, 채널A+], wavve: 채널A 플러스}
 
     - {name: [KBS 드라마, KBS드라마, HD KBS드라마], wavve: KBS Drama}   
-    - {name: [KBS joy, KBS Joy, HD KBS JOY, KBS조이], wavve: KBS JOY}
-    # - {name: [HD KBS JOY, KBS조이], wavve: KBS JOY}
+    # - {name: [KBS joy, KBS Joy, HD KBS JOY, KBS조이], wavve: KBS JOY}
+    - {name: [HD KBS JOY, KBS조이], wavve: KBS JOY}
     - {name: [KBS키즈], wavve: KBS KIDS}
 
-    - {name: [MBC 드라마넷, MBC 드라마], wavve: MBC Drama}
+    - {name: [MBC Dramanet, MBC 드라마넷, MBC 드라마, HD MBC 드라마], wavve: MBC Drama}
 
     - {name: [SBS fun E, HD SBS funE], wavve: SBS funE}
     - {name: [SBS 플러스, HD SBS Plus], wavve: SBS Plus}

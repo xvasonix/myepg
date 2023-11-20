@@ -22,6 +22,7 @@ class ModuleMain(PluginModuleBase):
             f'{self.name}_WAVVE': 'False',
             f'{self.name}_TVING': 'False',
             f'{self.name}_SPOTV': 'False',
+            f'{self.name}_match': 'False',
         }
 
 

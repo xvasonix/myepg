@@ -17,7 +17,10 @@
       <!-- {{ macros.info_text_go('api_epg', 'EPG', value=arg['api_epg']) }} -->
       {{ macros.info_text_go('api_epgall', 'EPGALL', value=arg['api_epgall']) }}
       {{ macros.m_hr() }}
-      {{ macros.setting_checkbox('main_A1', 'A1사용자', value=arg['main_A1'],  desc=['오라클 A1 사용자는 반드시 ON - WAVVE 소스 요청 제거'] ) }}
+      {{ macros.setting_checkbox('main_A1', 'A1 User', value=arg['main_A1'], 
+      desc=['- oracle에서 wavve 사용이 안되기 때문에 다른 소스 사용을 위해 요청 wavve 요청 차단', 
+      '- oracle 인데 proxy를 사용하시는 분은 OFF', 
+      '- wavve 관련 proxy 설정은 support_site plugin, wavve 탭에서 설정']) }}
       {{ macros.m_hr() }}
       {{ macros.setting_checkbox('main_KT', 'KT', value=arg['main_KT']) }}
       {{ macros.setting_checkbox('main_LG', 'LG', value=arg['main_LG']) }}
@@ -27,6 +30,8 @@
       {{ macros.setting_checkbox('main_WAVVE', 'WAVVE', value=arg['main_WAVVE']) }}
       {{ macros.setting_checkbox('main_TVING', 'TVING', value=arg['main_TVING']) }}
       {{ macros.setting_checkbox('main_SPOTV', 'SPOTV', value=arg['main_SPOTV']) }}
+      {{ macros.m_hr() }}
+      {{ macros.setting_checkbox('main_match', 'm3u 와 epg 채널 매치', value=arg['main_match'], desc=['experimental']) }}
       {{ macros.m_hr() }}
       {{ macros.setting_buttons([['delete_setting_file_btn', '삭제']], left='EPG2XML 설정 파일 삭제', desc=['file 폴더 삭제 ( Channel.json / epg2xml.json / xmltv.xml )'] ) }}
 
