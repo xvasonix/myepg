@@ -70,14 +70,7 @@ class MYEPG:
     def epg_update_script(cls):
         try:
             P.logger.info('epg_update_script start')
-
-            # cur_dir = os.path.dirname(__file__)
-            # epg2xml_json_path = f"{cur_dir}/file/epg2xml.json"
-            # channel_json_path = f"{cur_dir}/file/Channel.json"
-            # xmltv_xml_path = f"{cur_dir}/file/xmltv.xml"
-
             file_folder_path = f"{os.path.dirname(__file__)}/file"
-            P.logger.info('file_folder_path')
             epg2xml_json_path = f"{file_folder_path}/epg2xml.json"
             channel_json_path = f"{file_folder_path}/Channel.json"
             xmltv_xml_path = f"{file_folder_path}/xmltv.xml"
@@ -171,16 +164,14 @@ class MYEPG:
         try: 
             if not os.path.exists(path):  
                 P.logger.info(f'checkEpg2xml {path} 생성')
-                # epg2xml 파일이 없으면 기본값 복제해서 생성
                 # epg2xml_default = copy.deepcopy(_epg2xml_default)
                 # cls.makeEpg2xml(path, epg2xml_default)
+
                 # epg2xml run 으로 생성
                 cls.makeEpg2xml_command(path)
 
-            # 각 소스 ENABLED 을 True 로 해야 Channel.json 채널 목록 불러올 수 있음 
-            P.logger.info(f'checkEpg2xml {path} 수정')
             epg2xml_json = cls.getEpg2xml(path)
-            P.logger.info(f'epg2xml_json : {epg2xml_json}')
+            # P.logger.info(f'epg2xml_json : {epg2xml_json}')
 
             proxy_url = cls.get_wavve_proxy()
             if proxy_url != '':
@@ -252,12 +243,6 @@ class MYEPG:
     def makeEpg2xml(cls, config_path, data_json):
         P.logger.info(f"init - user_epg2xml : {config_path} - main_A1 값 : {P.ModelSetting.get_bool('main_A1')}")
         try:
-            # subprocess.call(f"epg2xml run --config {config_path}", shell=True)  
-            # command = ['epg2xml', 'run', '--config', config_path]
-            # with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as proc:
-            #     for line in proc.stderr:
-            #         cls.print_log(line)
-
             with open(config_path, 'w', encoding='utf-8') as f:
                 txt = json.dumps(data_json, ensure_ascii=False, indent=2)
                 txt = re.sub(r",\n\s{8}\"", ', "', txt)
