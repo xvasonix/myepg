@@ -96,7 +96,7 @@ match_channels:
     # 177 	SBS 	K POP 	HOT TRACK #2 	
     # 178 	SBS 	📻GorealraM 	Love 20 (재)
 
-    # - {name: [K POP], wavve: THE K-POP}
+    - {name: [K POP], wavve: THE K-POP}
 
     - {name: [어린이TV], wavve: 대교어린이TV}
     - {name: [애니맥스], wavve: Animax}
