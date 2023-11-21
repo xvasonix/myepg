@@ -70,10 +70,11 @@ class MYEPG:
     def epg_update_script(cls):
         try:
             P.logger.info('epg_update_script start')
-            file_folder_path = f"{os.path.dirname(__file__)}/file"
-            epg2xml_json_path = f"{file_folder_path}/epg2xml.json"
-            channel_json_path = f"{file_folder_path}/Channel.json"
-            xmltv_xml_path = f"{file_folder_path}/xmltv.xml"
+
+            file_folder_path = os.path.join(os.path.dirname(__file__), 'file')
+            epg2xml_json_path = os.path.join(file_folder_path, 'epg2xml.json')
+            channel_json_path = os.path.join(file_folder_path, 'Channel.json') 
+            xmltv_xml_path = os.path.join(file_folder_path, 'xmltv.xml')
 
             # cls.deleteDirectory(file_folder_path)
             cls.makeDirectory(file_folder_path)
@@ -85,11 +86,11 @@ class MYEPG:
             if cls.checkChannel(channel_json_path)==True:
                 cls.setEpg2xml(epg2xml_json_path, channel_json_path)
                 cls.makeXmltv(epg2xml_json_path, channel_json_path, xmltv_xml_path)
+                if P.ModelSetting.get_bool('main_match'):
+                    cls.match_channels()
             else:
                 P.logger.error('No channel.json file')
 
-            if P.ModelSetting.get_bool('main_match'):
-                cls.match_channels()
             P.logger.info('epg_update_script end')
         except Exception as e: 
             P.logger.exception(f'Exception:{str(e)}')
@@ -253,24 +254,21 @@ class MYEPG:
 
     @classmethod
     def makeEpg2xml_command(cls, config_path):
-        P.logger.info(f"init - user_epg2xml : {config_path} - main_A1 값 : {P.ModelSetting.get_bool('main_A1')}")
-        try:
-            os.chdir(f'{os.path.dirname(__file__)}/epg2xml')
-            # command = ['python', '-m', 'epg2xml', 'run', '--config', config_path]
-            command = ['python', '-m', 'epg2xml', 'run', '--config', config_path, '--parallel']
-            with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as proc:
-                for line in proc.stderr:
-                    cls.print_log(line)
-
-        except OSError:
-            P.logger.exception("Error: Failed to create the directory.")
+        P.logger.info(f"init - makeEpg2xml_command : {config_path} - main_A1 값 : {P.ModelSetting.get_bool('main_A1')}")
+        os.chdir(os.path.join(os.path.dirname(__file__), 'epg2xml'))
+        # command = ['python', '-m', 'epg2xml', 'run', '--config', config_path]
+        command = ['python', '-m', 'epg2xml', 'run', '--config', config_path, '--parallel']
+        with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as proc:
+            for line in proc.stderr:
+                cls.print_log(line)
+        P.logger.info('makeEpg2xml_command end')
 
     @classmethod
     def updateChannel(cls, config_path, channel_path):
-        P.logger.info('updateChannel start - 프록시 미사용 오라클 유저 wavve 차단')
+        P.logger.info('updateChannel start')
         cls.disable_wavve(config_path)
 
-        os.chdir(f'{os.path.dirname(__file__)}/epg2xml')
+        os.chdir(os.path.join(os.path.dirname(__file__), 'epg2xml'))
         # command = ['epg2xml', 'update_channels', '--config', config_path, '--channelfile', channel_path]
         command = ['python', '-m', 'epg2xml', 'update_channels', '--config', config_path, '--channelfile', channel_path, '--parallel']
         with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as proc:
@@ -283,7 +281,8 @@ class MYEPG:
     @classmethod
     def makeXmltv(cls, config_path, channel_path, xml_path):
         P.logger.info('makeXmltv start')
-        os.chdir(f'{os.path.dirname(__file__)}/epg2xml')
+
+        os.chdir(os.path.join(os.path.dirname(__file__), 'epg2xml'))
         # command = ['epg2xml', 'run', '--config', config_path', '--channelfile', channel_path, '--xmlfile', xml_path]
         command = ['python', '-m', 'epg2xml', 'run', '--config', config_path, '--channelfile', channel_path, '--xmlfile', xml_path, '--parallel']
         with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as proc:
@@ -295,8 +294,10 @@ class MYEPG:
 
     @classmethod
     def disable_wavve(cls, path):
+        P.logger.info('disable_wavve start')
         epg2xml_json = cls.getEpg2xml(path)
         if P.ModelSetting.get_bool('main_A1'):
+            P.logger.info('프록시 미사용 오라클 유저 wavve 차단')
             epg2xml_json['WAVVE']['ENABLED'] = False
         else:
             epg2xml_json['WAVVE']['ENABLED'] = True
@@ -304,6 +305,8 @@ class MYEPG:
         with open(path, 'w', encoding='utf-8') as f:
             txt = json.dumps(epg2xml_json, ensure_ascii=False, indent=2)
             f.write(txt)
+
+        P.logger.info('disable_wavve end')
 
     @classmethod
     def print_log(cls, line):
