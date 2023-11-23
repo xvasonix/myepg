@@ -16,7 +16,6 @@
     {{ macros.m_tab_content_start('normal', true) }}
       <!-- {{ macros.info_text_go('api_epg', 'EPG', value=arg['api_epg']) }} -->
       {{ macros.info_text_go('api_epgall', 'EPGALL', value=arg['api_epgall']) }}
-      <!-- {{ macros.info_text('epg_updated_time', '', value='만든 시간 : ' +arg['epg_updated_time']) }} -->
       {{ macros.info_text_and_buttons('epg_updated_time', '', [['make_epg_btn', '다시 만들기']], value='만든 시간 : ' + arg['epg_updated_time'], desc=None) }}
       {{ macros.m_hr() }}
       {{ macros.setting_checkbox('main_A1', 'A1 User', value=arg['main_A1'], 
@@ -54,7 +53,9 @@ $("body").on('click', '#delete_setting_file_btn', function(e){
 
 $("body").on('click', '#make_epg_btn', function(e){
   e.preventDefault();
-  globalSendCommand('make_epg');
+  globalSendCommand('make_epg', null, null, null, function(ret){
+    $('#epg_updated_time').html(`만든 시간: ${ret.updated_time}`);
+  });
 });
 </script>
 {% endblock %}

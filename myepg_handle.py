@@ -81,7 +81,7 @@ class MYEPG:
             cls.makeDirectory(file_folder_path)
             cls.checkEpg2xml(epg2xml_json_path)  
 
-            cls.setEnabled(epg2xml_json_path, channel_json_path)
+            cls.setEnabled(epg2xml_json_path)
             cls.updateChannel(epg2xml_json_path, channel_json_path)
             
             if cls.checkChannel(channel_json_path):
@@ -110,7 +110,7 @@ class MYEPG:
 
 
     @classmethod
-    def setEnabled(cls, path, channel_path):
+    def setEnabled(cls, path):
         try:
             P.logger.info('epg2xml_json setEnabled start')
             epg2xml_json = cls.getEpg2xml(path)
@@ -167,6 +167,7 @@ class MYEPG:
             P.logger.info('epg2xml_json setMyChannels start')
             epg2xml_json = cls.getEpg2xml(path)
             # P.logger.debug(f'setMyChannels, {epg2xml_json}')
+            
             with open(channel_path, 'r', encoding='utf-8') as f:
                 channel_json_data = json.load(f)
                 

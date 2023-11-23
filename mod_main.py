@@ -3,7 +3,7 @@ from flask import send_file, jsonify, render_template
 from .setup import *
 from .myepg_handle import MYEPG
 import os, traceback
-
+from datetime import datetime
 
 class ModuleMain(PluginModuleBase):
 
@@ -45,10 +45,9 @@ class ModuleMain(PluginModuleBase):
             ret = {f'ret':'success', 'msg':'삭제 명령을 전달하였습니다.'}
         elif command == 'make_epg':
             P.logger.info('make_epg')
-            # epg_updated_time = P.ModelSetting.get('epg_updated_time')
-            # ret = {'ret':'success', 'msg':epg_updated_time}
             MYEPG.epg_update_script()
-            ret = {'ret':'success', 'msg':'생성을 시작합니다.'}
+            updated_time = P.ModelSetting.get('epg_updated_time')
+            ret = {'ret':'success', 'updated_time': updated_time, 'msg':'생성을 시작합니다.'}
         return jsonify(ret)
 
 
