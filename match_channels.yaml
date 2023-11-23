@@ -54,49 +54,7 @@ match_channels:
     # - {name: [PLAYY힐링], wavve: PLAYY 힐링 영화} 
     # - {name: [PLAYY중국드라마], wavve: PLAYY 중국 드라마} 
 
-    # kbs, sbs, mbc (기타)
-    # 139     KBS 	1TV 		
-    # 140 	KBS 	2TV 		
-    # 141 	KBS 	KBS WORLD 		
-    # 142 	KBS 	KBS NEWS D 		
-    # 143 	KBS 	KBS Drama 		
-    # 144 	KBS 	KBS Joy 		
-    # 145 	KBS 	KBS Story 		
-    # 146 	KBS 	KBS LIFE 		
-    # 147 	KBS 	KBS KIDS 		
-    # 148 	KBS 	독도 		
-    # 149 	KBS 	📻1라디오 		
-    # 150 	KBS 	📻2라디오 		
-    # 151 	KBS 	📻3라디오 		
-    # 152 	KBS 	📻1FM 		
-    # 153 	KBS 	📻2FM 		
-    # 154 	KBS 	📻한민족방송 		
-    # 155 	KBS 	📻KBS WORLD MULTILINGUAL 		
-    # 156 	KBS 	📻KBS WORLD ENGLISH 		
-    # 157 	MBC 	MBC 	테마기행 길(재) 	
-    # 158 	MBC 	MBC every1 	어서와~ 한국은 처음이지? 266회 	
-    # 159 	MBC 	MBC DRAMA 	세 번째 결혼 12회 	
-    # 160 	MBC 	MBC M 	무한도전 290회 	
-    # 161 	MBC 	MBC ON 	인어아가씨 202회 	
-    # 162 	MBC 	📻표준FM 	건강한 아침 김초롱입니다 	
-    # 163 	MBC 	📻FM4U 	K팝 투데이 	
-    # 164 	MBC 	📻올댓뮤직 	음악의 발견 1부 	
-    # 165 	SBS 	SBS 	SBS 특선 다큐멘터리 	
-    # 166 	SBS 	📻POWER FM 	이인권의 펀펀투데이 	
-    # 167 	SBS 	📻LOVE FM 	최영주의 아침편지 	
-    # 168 	SBS 	POWER FM (보는 라디오) 	이인권의 펀펀투데이 	
-    # 169 	SBS 	LOVE FM (보는 라디오) 	🔒최영주의 아침편지 	
-    # 170 	SBS 	SBS Plus 	수학 없는 수학여행 	
-    # 171 	SBS 	SBS funE 	수학 없는 수학여행 	
-    # 172 	SBS 	SBS Sports 	하나카드 PBA 챔피언십 23-24 	
-    # 173 	SBS 	SBS Golf 	THE SHOT 	
-    # 174 	SBS 	SBS Golf2 	THE SHOT 	
-    # 175 	SBS 	SBS BIZ 	빅퀘스천 	
-    # 176 	SBS 	SBS M 	HITS : K-POP 	
-    # 177 	SBS 	K POP 	HOT TRACK #2 	
-    # 178 	SBS 	📻GorealraM 	Love 20 (재)
-
-    - {name: [K POP], wavve: THE K-POP}
+    # - {name: [K POP], wavve: THE K-POP}
 
     - {name: [어린이TV], wavve: 대교어린이TV}
     - {name: [애니맥스], wavve: Animax}
@@ -170,3 +128,45 @@ match_channels:
     # - {name: KBS한민족, wavve: [한민족방송, KBS 한민족]}
     # - {name: SBS 고릴라라디오 M, wavve: [GorealraM]}
     # - {name: YTNNewsFM, wavve: [YTN 라디오]}
+
+    # kbs, sbs, mbc (기타)
+    # 139   KBS 	1TV 		
+    # 140 	KBS 	2TV 		
+    # 141 	KBS 	KBS WORLD 		
+    # 142 	KBS 	KBS NEWS D 		
+    # 143 	KBS 	KBS Drama 		
+    # 144 	KBS 	KBS Joy 		
+    # 145 	KBS 	KBS Story 		
+    # 146 	KBS 	KBS LIFE 		
+    # 147 	KBS 	KBS KIDS 		
+    # 148 	KBS 	독도 		
+    # 149 	KBS 	📻1라디오 		
+    # 150 	KBS 	📻2라디오 		
+    # 151 	KBS 	📻3라디오 		
+    # 152 	KBS 	📻1FM 		
+    # 153 	KBS 	📻2FM 		
+    # 154 	KBS 	📻한민족방송 		
+    # 155 	KBS 	📻KBS WORLD MULTILINGUAL 		
+    # 156 	KBS 	📻KBS WORLD ENGLISH 		
+    # 157 	MBC 	MBC 	테마기행 길(재) 	
+    # 158 	MBC 	MBC every1 	어서와~ 한국은 처음이지? 266회 	
+    # 159 	MBC 	MBC DRAMA 	세 번째 결혼 12회 	
+    # 160 	MBC 	MBC M 	무한도전 290회 	
+    # 161 	MBC 	MBC ON 	인어아가씨 202회 	
+    # 162 	MBC 	📻표준FM 	건강한 아침 김초롱입니다 	
+    # 163 	MBC 	📻FM4U 	K팝 투데이 	
+    # 164 	MBC 	📻올댓뮤직 	음악의 발견 1부 	
+    # 165 	SBS 	SBS 	SBS 특선 다큐멘터리 	
+    # 166 	SBS 	📻POWER FM 	이인권의 펀펀투데이 	
+    # 167 	SBS 	📻LOVE FM 	최영주의 아침편지 	
+    # 168 	SBS 	POWER FM (보는 라디오) 	이인권의 펀펀투데이 	
+    # 169 	SBS 	LOVE FM (보는 라디오) 	🔒최영주의 아침편지 	
+    # 170 	SBS 	SBS Plus 	수학 없는 수학여행 	
+    # 171 	SBS 	SBS funE 	수학 없는 수학여행 	
+    # 172 	SBS 	SBS Sports 	하나카드 PBA 챔피언십 23-24 	
+    # 173 	SBS 	SBS Golf 	THE SHOT 	
+    # 174 	SBS 	SBS Golf2 	THE SHOT 	
+    # 175 	SBS 	SBS BIZ 	빅퀘스천 	
+    # 176 	SBS 	SBS M 	HITS : K-POP 	
+    # 177 	SBS 	K POP 	HOT TRACK #2 	
+    # 178 	SBS 	📻GorealraM 	Love 20 (재)
