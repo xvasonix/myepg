@@ -23,6 +23,7 @@ class ModuleMain(PluginModuleBase):
             f'{self.name}_TVING': 'False',
             f'{self.name}_SPOTV': 'False',
             f'{self.name}_match': 'False',
+            f'epg_updated_time': '',
         }
 
 
@@ -42,6 +43,12 @@ class ModuleMain(PluginModuleBase):
             MYEPG.deleteDirectory(f"{os.path.dirname(__file__)}/file")
             # P.logger.info(f"설정 파일 삭제 : {file_folder_path}")
             ret = {f'ret':'success', 'msg':'삭제 명령을 전달하였습니다.'}
+        elif command == 'make_epg':
+            P.logger.info('make_epg')
+            # epg_updated_time = P.ModelSetting.get('epg_updated_time')
+            # ret = {'ret':'success', 'msg':epg_updated_time}
+            MYEPG.epg_update_script()
+            ret = {'ret':'success', 'msg':'생성을 시작합니다.'}
         return jsonify(ret)
 
 

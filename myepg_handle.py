@@ -7,6 +7,7 @@ import json
 import re
 import copy
 import shutil
+from datetime import datetime
 
 import xml.etree.ElementTree as ET
 from copy import deepcopy
@@ -83,8 +84,10 @@ class MYEPG:
             cls.setEnabled(epg2xml_json_path, channel_json_path)
             cls.updateChannel(epg2xml_json_path, channel_json_path)
             
-            if cls.checkChannel(channel_json_path)==True:
+            if cls.checkChannel(channel_json_path):
                 cls.setMyChannels(epg2xml_json_path, channel_json_path)
+
+                cls.deleteFile(xmltv_xml_path)
                 cls.makeXmltv(epg2xml_json_path, channel_json_path, xmltv_xml_path)
                 if P.ModelSetting.get_bool('main_match'):
                     cls.match_channels(xmltv_xml_path)
@@ -111,42 +114,41 @@ class MYEPG:
         try:
             P.logger.info('epg2xml_json setEnabled start')
             epg2xml_json = cls.getEpg2xml(path)
-            with open(channel_path, 'r', encoding='utf-8') as f:
-                channel_json_data = json.load(f)
+            # P.logger.debug(f'setEnabled, {epg2xml_json}')
                 
-                if 'KT' in channel_json_data.keys():
-                    epg2xml_json['KT']['ENABLED'] = P.ModelSetting.get_bool('main_KT')
+            if 'KT' in epg2xml_json.keys():
+                epg2xml_json['KT']['ENABLED'] = P.ModelSetting.get_bool('main_KT')
 
-                if 'LG' in channel_json_data.keys():
-                    epg2xml_json['LG']['ENABLED'] = P.ModelSetting.get_bool('main_LG')
+            if 'LG' in epg2xml_json.keys():
+                epg2xml_json['LG']['ENABLED'] = P.ModelSetting.get_bool('main_LG')
 
-                if 'SK' in channel_json_data.keys():
-                    epg2xml_json['SK']['ENABLED'] = P.ModelSetting.get_bool('main_SK')
-                
-                if 'DAUM' in channel_json_data.keys():
-                    epg2xml_json['DAUM']['ENABLED'] = P.ModelSetting.get_bool('main_DAUM')
-                
-                if 'NAVER' in channel_json_data.keys():
-                    epg2xml_json['NAVER']['ENABLED'] = P.ModelSetting.get_bool('main_NAVER')
+            if 'SK' in epg2xml_json.keys():
+                epg2xml_json['SK']['ENABLED'] = P.ModelSetting.get_bool('main_SK')
+            
+            if 'DAUM' in epg2xml_json.keys():
+                epg2xml_json['DAUM']['ENABLED'] = P.ModelSetting.get_bool('main_DAUM')
+            
+            if 'NAVER' in epg2xml_json.keys():
+                epg2xml_json['NAVER']['ENABLED'] = P.ModelSetting.get_bool('main_NAVER')
 
-                if 'WAVVE' in channel_json_data.keys():
-                    proxy_url = cls.get_wavve_proxy()
-                    if proxy_url != '':
-                        epg2xml_json['WAVVE']['ENABLED'] = P.ModelSetting.get_bool('main_WAVVE')
-                        epg2xml_json['WAVVE']['HTTP_PROXY'] = proxy_url
+            if 'WAVVE' in epg2xml_json.keys():
+                proxy_url = cls.get_wavve_proxy()
+                if proxy_url != '':
+                    epg2xml_json['WAVVE']['ENABLED'] = P.ModelSetting.get_bool('main_WAVVE')
+                    epg2xml_json['WAVVE']['HTTP_PROXY'] = proxy_url
+                else:
+                    if P.ModelSetting.get_bool('main_A1'):
+                        epg2xml_json['WAVVE']['ENABLED'] = False
+                        epg2xml_json['WAVVE']['HTTP_PROXY'] = None
                     else:
-                        if P.ModelSetting.get_bool('main_A1'):
-                            epg2xml_json['WAVVE']['ENABLED'] = False
-                            epg2xml_json['WAVVE']['HTTP_PROXY'] = None
-                        else:
-                            epg2xml_json['WAVVE']['ENABLED'] = P.ModelSetting.get_bool('main_WAVVE')
-                            epg2xml_json['WAVVE']['HTTP_PROXY'] = None
+                        epg2xml_json['WAVVE']['ENABLED'] = P.ModelSetting.get_bool('main_WAVVE')
+                        epg2xml_json['WAVVE']['HTTP_PROXY'] = None
 
-                if 'TVING' in channel_json_data.keys():
-                    epg2xml_json['TVING']['ENABLED'] = P.ModelSetting.get_bool('main_TVING')               
-                
-                if 'SPOTV' in channel_json_data.keys():
-                    epg2xml_json['SPOTV']['ENABLED'] = P.ModelSetting.get_bool('main_SPOTV')
+            if 'TVING' in epg2xml_json.keys():
+                epg2xml_json['TVING']['ENABLED'] = P.ModelSetting.get_bool('main_TVING')               
+            
+            if 'SPOTV' in epg2xml_json.keys():
+                epg2xml_json['SPOTV']['ENABLED'] = P.ModelSetting.get_bool('main_SPOTV')
 
             with open(path, 'w', encoding='utf-8') as f:
                 txt = json.dumps(epg2xml_json, ensure_ascii=False, indent=2)
@@ -164,6 +166,7 @@ class MYEPG:
         try:
             P.logger.info('epg2xml_json setMyChannels start')
             epg2xml_json = cls.getEpg2xml(path)
+            # P.logger.debug(f'setMyChannels, {epg2xml_json}')
             with open(channel_path, 'r', encoding='utf-8') as f:
                 channel_json_data = json.load(f)
                 
@@ -182,7 +185,7 @@ class MYEPG:
                 if 'NAVER' in channel_json_data.keys() and epg2xml_json['NAVER']['ENABLED']:
                     epg2xml_json['NAVER']['MY_CHANNELS'] = channel_json_data['NAVER']['CHANNELS']
 
-                if 'WAVVE' in channel_json_data.keys() and P.ModelSetting.get_bool('main_WAVVE'):
+                if 'WAVVE' in channel_json_data.keys() and epg2xml_json['WAVVE']['ENABLED']:
                     epg2xml_json['WAVVE']['MY_CHANNELS'] = channel_json_data['WAVVE']['CHANNELS']
                     
                 if 'TVING' in channel_json_data.keys() and epg2xml_json['TVING']['ENABLED']:
@@ -250,6 +253,7 @@ class MYEPG:
         try:
             if os.path.exists(path):
                 shutil.rmtree(path)
+                P.ModelSetting.set('epg_updated_time', '')
                 P.logger.info(f"설정 폴더 삭제 : {path}")
         except OSError:
             P.logger.exception(f"Error: Failed to delete the {path}.")
@@ -319,6 +323,8 @@ class MYEPG:
         with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as proc:
             for line in proc.stderr:
                 cls.print_log(line)
+
+            P.ModelSetting.set('epg_updated_time', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
         P.logger.info('makeXmltv end')
 
