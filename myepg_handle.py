@@ -5,11 +5,11 @@ from .setup import P
 import subprocess
 import json
 import re
-import copy
 import shutil
 from datetime import datetime
 
 import xml.etree.ElementTree as ET
+import copy
 from copy import deepcopy
 from pathlib import Path
 import yaml
@@ -114,7 +114,7 @@ class MYEPG:
         try:
             P.logger.info('epg2xml_json setEnabled start')
             epg2xml_json = cls.getEpg2xml(path)
-            # P.logger.debug(f'setEnabled, {epg2xml_json}')
+            # P.logger.debug(f'setEnabled, {json.dumps(epg2xml_json, ensure_ascii=False, indent=2)}')
                 
             # if 'KT' in epg2xml_json.keys():
             #     epg2xml_json['KT']['ENABLED'] = P.ModelSetting.get_bool('main_KT')
@@ -145,7 +145,6 @@ class MYEPG:
             # if 'SPOTV' in epg2xml_json.keys():
             #     epg2xml_json['SPOTV']['ENABLED'] = P.ModelSetting.get_bool('main_SPOTV')
 			
-			#P.logger.debug(f'setEnabled, {epg2xml_json}')
             with open(path, 'w', encoding='utf-8') as f:
                 txt = json.dumps(epg2xml_json, ensure_ascii=False, indent=2)
                 txt = re.sub(r",\n\s{8}\"", ', "', txt)
@@ -162,11 +161,12 @@ class MYEPG:
         try:
             P.logger.info('epg2xml_json setMyChannels start')
             epg2xml_json = cls.getEpg2xml(path)
-            # P.logger.debug(f'setMyChannels, {epg2xml_json}')
-            
+            # P.logger.debug(f'setMyChannels, {json.dumps(epg2xml_json, ensure_ascii=False, indent=2)}')
+
             with open(channel_path, 'r', encoding='utf-8') as f:
                 channel_json_data = json.load(f)
-                
+                # P.logger.debug(f'channel_json_data, {json.dumps(channel_json_data, ensure_ascii=False, indent=2)}')
+
                 # if 'KT' in channel_json_data.keys() and epg2xml_json['KT']['ENABLED']:
                 #     epg2xml_json['KT']['MY_CHANNELS'] = channel_json_data['KT']['CHANNELS']
 
