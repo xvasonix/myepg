@@ -48,13 +48,15 @@
 <script type="text/javascript">
 $("body").on('click', '#delete_setting_file_btn', function(e){
   e.preventDefault();
-  globalSendCommand('delete_setting_file');
+  globalSendCommand('delete_setting_file', null, null, null, function(ret){
+    $('#epg_updated_time').html(`만든 시간 : `);
+  });
 });
 
 $("body").on('click', '#make_epg_btn', function(e){
   e.preventDefault();
   globalSendCommand('make_epg', null, null, null, function(ret){
-    $('#epg_updated_time').html(`만든 시간: ${ret.updated_time}`);
+    $('#epg_updated_time').html(`만든 시간 : ${ret.updated_time}`);
   });
 });
 </script>
