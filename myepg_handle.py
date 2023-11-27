@@ -116,20 +116,16 @@ class MYEPG:
             epg2xml_json = cls.getEpg2xml(path)
             # P.logger.debug(f'setEnabled, {epg2xml_json}')
                 
-            if 'KT' in epg2xml_json.keys():
-                epg2xml_json['KT']['ENABLED'] = P.ModelSetting.get_bool('main_KT')
-
-            if 'LG' in epg2xml_json.keys():
-                epg2xml_json['LG']['ENABLED'] = P.ModelSetting.get_bool('main_LG')
-
-            if 'SK' in epg2xml_json.keys():
-                epg2xml_json['SK']['ENABLED'] = P.ModelSetting.get_bool('main_SK')
-            
-            if 'DAUM' in epg2xml_json.keys():
-                epg2xml_json['DAUM']['ENABLED'] = P.ModelSetting.get_bool('main_DAUM')
-            
-            if 'NAVER' in epg2xml_json.keys():
-                epg2xml_json['NAVER']['ENABLED'] = P.ModelSetting.get_bool('main_NAVER')
+            # if 'KT' in epg2xml_json.keys():
+            #     epg2xml_json['KT']['ENABLED'] = P.ModelSetting.get_bool('main_KT')
+            # if 'LG' in epg2xml_json.keys():
+            #     epg2xml_json['LG']['ENABLED'] = P.ModelSetting.get_bool('main_LG')
+            # if 'SK' in epg2xml_json.keys():
+            #     epg2xml_json['SK']['ENABLED'] = P.ModelSetting.get_bool('main_SK')
+            # if 'DAUM' in epg2xml_json.keys():
+            #     epg2xml_json['DAUM']['ENABLED'] = P.ModelSetting.get_bool('main_DAUM')
+            # if 'NAVER' in epg2xml_json.keys():
+            #     epg2xml_json['NAVER']['ENABLED'] = P.ModelSetting.get_bool('main_NAVER')
 
             if 'WAVVE' in epg2xml_json.keys():
                 proxy_url = cls.get_wavve_proxy()
@@ -144,12 +140,12 @@ class MYEPG:
                         epg2xml_json['WAVVE']['ENABLED'] = P.ModelSetting.get_bool('main_WAVVE')
                         epg2xml_json['WAVVE']['HTTP_PROXY'] = None
 
-            if 'TVING' in epg2xml_json.keys():
-                epg2xml_json['TVING']['ENABLED'] = P.ModelSetting.get_bool('main_TVING')               
-            
-            if 'SPOTV' in epg2xml_json.keys():
-                epg2xml_json['SPOTV']['ENABLED'] = P.ModelSetting.get_bool('main_SPOTV')
-
+            # if 'TVING' in epg2xml_json.keys():
+            #     epg2xml_json['TVING']['ENABLED'] = P.ModelSetting.get_bool('main_TVING')               
+            # if 'SPOTV' in epg2xml_json.keys():
+            #     epg2xml_json['SPOTV']['ENABLED'] = P.ModelSetting.get_bool('main_SPOTV')
+			
+			#P.logger.debug(f'setEnabled, {epg2xml_json}')
             with open(path, 'w', encoding='utf-8') as f:
                 txt = json.dumps(epg2xml_json, ensure_ascii=False, indent=2)
                 txt = re.sub(r",\n\s{8}\"", ', "', txt)
@@ -171,30 +167,72 @@ class MYEPG:
             with open(channel_path, 'r', encoding='utf-8') as f:
                 channel_json_data = json.load(f)
                 
-                if 'KT' in channel_json_data.keys() and epg2xml_json['KT']['ENABLED']:
+                # if 'KT' in channel_json_data.keys() and epg2xml_json['KT']['ENABLED']:
+                #     epg2xml_json['KT']['MY_CHANNELS'] = channel_json_data['KT']['CHANNELS']
+
+                # if 'LG' in channel_json_data.keys() and epg2xml_json['LG']['ENABLED']:
+                #     epg2xml_json['LG']['MY_CHANNELS'] = channel_json_data['LG']['CHANNELS']
+
+                # if 'SK' in channel_json_data.keys() and epg2xml_json['SK']['ENABLED']:
+                #     epg2xml_json['SK']['MY_CHANNELS'] = channel_json_data['SK']['CHANNELS']
+
+                # if 'DAUM' in channel_json_data.keys() and epg2xml_json['DAUM']['ENABLED']:
+                #     epg2xml_json['DAUM']['MY_CHANNELS'] = channel_json_data['DAUM']['CHANNELS'] 
+                
+                # if 'NAVER' in channel_json_data.keys() and epg2xml_json['NAVER']['ENABLED']:
+                #     epg2xml_json['NAVER']['MY_CHANNELS'] = channel_json_data['NAVER']['CHANNELS']
+
+                # if 'WAVVE' in channel_json_data.keys() and epg2xml_json['WAVVE']['ENABLED']:
+                #     epg2xml_json['WAVVE']['MY_CHANNELS'] = channel_json_data['WAVVE']['CHANNELS']
+
+                # if 'TVING' in channel_json_data.keys() and epg2xml_json['TVING']['ENABLED']:
+                #     epg2xml_json['TVING']['MY_CHANNELS'] = channel_json_data['TVING']['CHANNELS']
+
+                # if 'SPOTV' in channel_json_data.keys() and epg2xml_json['SPOTV']['ENABLED']:
+                #     epg2xml_json['SPOTV']['MY_CHANNELS'] = channel_json_data['SPOTV']['CHANNELS']
+
+              
+                if P.ModelSetting.get_bool('main_KT'):
                     epg2xml_json['KT']['MY_CHANNELS'] = channel_json_data['KT']['CHANNELS']
+                else:
+                    epg2xml_json['KT']['MY_CHANNELS'] =[]
 
-                if 'LG' in channel_json_data.keys() and epg2xml_json['LG']['ENABLED']:
+                if P.ModelSetting.get_bool('main_LG'):
                     epg2xml_json['LG']['MY_CHANNELS'] = channel_json_data['LG']['CHANNELS']
+                else:
+                    epg2xml_json['LG']['MY_CHANNELS'] =[]
 
-                if 'SK' in channel_json_data.keys() and epg2xml_json['SK']['ENABLED']:
+                if P.ModelSetting.get_bool('main_SK'):
                     epg2xml_json['SK']['MY_CHANNELS'] = channel_json_data['SK']['CHANNELS']
-                
-                if 'DAUM' in channel_json_data.keys() and epg2xml_json['DAUM']['ENABLED']:
-                    epg2xml_json['DAUM']['MY_CHANNELS'] = channel_json_data['DAUM']['CHANNELS'] 
-                
-                if 'NAVER' in channel_json_data.keys() and epg2xml_json['NAVER']['ENABLED']:
-                    epg2xml_json['NAVER']['MY_CHANNELS'] = channel_json_data['NAVER']['CHANNELS']
+                else:
+                    epg2xml_json['SK']['MY_CHANNELS'] =[]
 
+                if P.ModelSetting.get_bool('main_DAUM'):
+                    epg2xml_json['DAUM']['MY_CHANNELS'] = channel_json_data['DAUM']['CHANNELS'] 
+                else:
+                    epg2xml_json['DAUM']['MY_CHANNELS'] =[]
+
+                if P.ModelSetting.get_bool('main_NAVER'):
+                    epg2xml_json['NAVER']['MY_CHANNELS'] = channel_json_data['NAVER']['CHANNELS']
+                else:
+                    epg2xml_json['NAVER']['MY_CHANNELS'] =[]
+
+                # ENABLED = True/False 만으로도 막을 수 있음. MY_CHANNELS 여부 상관없음
                 if 'WAVVE' in channel_json_data.keys() and epg2xml_json['WAVVE']['ENABLED']:
                     epg2xml_json['WAVVE']['MY_CHANNELS'] = channel_json_data['WAVVE']['CHANNELS']
-                    
-                if 'TVING' in channel_json_data.keys() and epg2xml_json['TVING']['ENABLED']:
+                else:
+                    epg2xml_json['WAVVE']['MY_CHANNELS'] =[]
+
+                if P.ModelSetting.get_bool('main_TVING'):
                     epg2xml_json['TVING']['MY_CHANNELS'] = channel_json_data['TVING']['CHANNELS']
-                
-                if 'SPOTV' in channel_json_data.keys() and epg2xml_json['SPOTV']['ENABLED']:
+                else:
+                    epg2xml_json['TVING']['MY_CHANNELS'] =[]
+
+                if P.ModelSetting.get_bool('main_SPOTV'):
                     epg2xml_json['SPOTV']['MY_CHANNELS'] = channel_json_data['SPOTV']['CHANNELS']
-              
+                else:
+                    epg2xml_json['SPOTV']['MY_CHANNELS'] =[]
+
             with open(path, 'w', encoding='utf-8') as f:
                 txt = json.dumps(epg2xml_json, ensure_ascii=False, indent=2)
                 txt = re.sub(r",\n\s{8}\"", ', "', txt)
