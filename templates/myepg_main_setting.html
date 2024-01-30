@@ -18,22 +18,38 @@
       {{ macros.info_text_go('api_epgall', 'EPGALL', value=arg['api_epgall']) }}
       {{ macros.info_text_and_buttons('epg_updated_time', '', [['make_epg_btn', '다시 만들기']], value='만든 시간 : ' + arg['epg_updated_time'], desc=None) }}
       {{ macros.m_hr() }}
-      {{ macros.setting_checkbox('main_A1', 'A1 User', value=arg['main_A1'], 
-      desc=['- oracle에서 wavve 사용이 안되기 때문에 다른 소스 사용을 위해 wavve 요청 차단', 
-      '- oracle인데 proxy를 사용하시는 분은 OFF', 
-      '- wavve 관련 proxy 설정은 support_site plugin, wavve 탭에서 설정']) }}
+
+      {{ macros.setting_checkbox('block_wavve', 'WAVVE 요청 차단', value=arg['block_wavve'], 
+      desc=[
+      '- 오라클 환경에서는 ON', 
+      '- 오라클 환경에서 Proxy URL을 설정했다면 OFF', 
+      '📌 WAVVE 관련 Proxy URL 설정은 support_site플러그인의 WAVVE 탭에서 설정'
+      ]) }}
       {{ macros.m_hr() }}
-      {{ macros.setting_checkbox('main_KT', 'KT', value=arg['main_KT']) }}
-      {{ macros.setting_checkbox('main_LG', 'LG', value=arg['main_LG']) }}
-      {{ macros.setting_checkbox('main_SK', 'SK', value=arg['main_SK']) }}
-      {{ macros.setting_checkbox('main_DAUM', 'DAUM', value=arg['main_DAUM']) }}
-      {{ macros.setting_checkbox('main_NAVER', 'NAVER', value=arg['main_NAVER']) }}
-      {{ macros.setting_checkbox('main_WAVVE', 'WAVVE', value=arg['main_WAVVE']) }}
-      {{ macros.setting_checkbox('main_TVING', 'TVING', value=arg['main_TVING']) }}
-      {{ macros.setting_checkbox('main_SPOTV', 'SPOTV', value=arg['main_SPOTV']) }}
+
+      {{ macros.setting_checkbox('use_alive_m3u', 'ALive m3uall 사용', value=arg['use_alive_m3u'], 
+      desc=[
+      'OFF : 선택한 제공자로 epg 생성 (기존방식)',
+      'ON : ALive m3uall의 tvg-name으로 epg 생성' 
+      ]) }}
+      {{ macros.setting_input_text('alive_m3uall_url', 'ALive m3uall url', value=arg['alive_m3uall_url']) }}
       {{ macros.m_hr() }}
-      {{ macros.setting_checkbox('main_match', 'm3u 와 epg 채널 매치', value=arg['main_match'], desc=['experimental']) }}
+
+      <div id="use_alive_m3u_div" class="collapse">
+      {{ macros.setting_checkbox('KT', 'KT', value=arg['KT']) }}
+      {{ macros.setting_checkbox('LG', 'LG', value=arg['LG']) }}
+      {{ macros.setting_checkbox('SK', 'SK', value=arg['SK']) }}
+      {{ macros.setting_checkbox('DAUM', 'DAUM', value=arg['DAUM']) }}
+      {{ macros.setting_checkbox('NAVER', 'NAVER', value=arg['NAVER']) }}
+      {{ macros.setting_checkbox('WAVVE', 'WAVVE', value=arg['WAVVE']) }}
+      {{ macros.setting_checkbox('TVING', 'TVING', value=arg['TVING']) }}
+      {{ macros.setting_checkbox('SPOTV', 'SPOTV', value=arg['SPOTV']) }}
       {{ macros.m_hr() }}
+      </div>
+
+      <!-- {{ macros.setting_checkbox('match_m3u_epg', 'm3u 와 epg 채널 매치', value=arg['match_m3u_epg'], desc=['experimental']) }}
+      {{ macros.m_hr() }} -->
+      
       {{ macros.setting_buttons([['delete_setting_file_btn', '삭제']], left='EPG2XML 설정 파일 삭제', desc=['file 폴더 삭제 ( Channel.json / epg2xml.json / xmltv.xml )'] ) }}
 
     {{ macros.m_tab_content_end() }}  
@@ -46,12 +62,23 @@
 </form>
 
 <script type="text/javascript">
+
+
+$(document).ready(function(){
+  use_collapse("use_alive_m3u", reverse=true)
+});
+
+
+$('#use_alive_m3u').change(function() {use_collapse('use_alive_m3u', reverse=true);});
+
+
 $("body").on('click', '#delete_setting_file_btn', function(e){
   e.preventDefault();
   globalSendCommand('delete_setting_file', null, null, null, function(ret){
     $('#epg_updated_time').html(`만든 시간 : `);
   });
 });
+
 
 $("body").on('click', '#make_epg_btn', function(e){
   e.preventDefault();
