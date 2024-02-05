@@ -7,9 +7,9 @@ import shutil
 from datetime import datetime
 import requests
 
-import xml.etree.ElementTree as ET
-from copy import deepcopy
-from pathlib import Path
+# import xml.etree.ElementTree as ET
+# from copy import deepcopy
+# from pathlib import Path
 
 import yaml
 try:
@@ -36,7 +36,6 @@ class M3uParser:
     def __init__(self, text):
         self.text = text
         self.tracks = []
-        self.readM3u()
 
 
     def readM3u(self):
@@ -47,7 +46,8 @@ class M3uParser:
 
     def readAllLines(self):
         self.lines = self.text.splitlines()
-        # logger.debug(self.lines)
+        # logger.info(self.lines)
+        # logger.info(len(self.lines))
         return len(self.lines)
 
 
@@ -191,7 +191,7 @@ class MYEPG:
     def epg_update_script(cls):
         try:
             logger.info('epg_update_script start()')
-
+            
             plugin_path = os.path.dirname(__file__)
             file_folder_path = os.path.join(plugin_path, 'file')
             epg2xml_json_path = os.path.join(file_folder_path, 'epg2xml.json')
@@ -208,7 +208,7 @@ class MYEPG:
             if cls.check_channels(channel_json_path):
                 cls.set_my_channels(epg2xml_json_path, channel_json_path)
                 delete_file(xmltv_xml_path)
-                cls.make_xmltv(epg2xml_json_path, channel_json_path, xmltv_xml_path)
+                cls.make_xmltv(epg2xml_json_path, channel_json_path, xmltv_xml_path)                
             else:
                 logger.error('No channel.json file')
 
@@ -233,10 +233,8 @@ class MYEPG:
                     if 'WAVVE' in providers: providers.remove('WAVVE')
                     if 'WAVVE' in priority: priority.remove('WAVVE')
                 else:
-                    # epg2xml_json['WAVVE']['ENABLED'] = ModelSetting.get_bool('WAVVE')
-                    # epg2xml_json['WAVVE']['ENABLED'] =  True if ModelSetting.get_bool('use_alive_m3u') is True else ModelSetting.get_bool('WAVVE')
                     epg2xml_json['WAVVE']['ENABLED'] =  True                            
-                    epg2xml_json['WAVVE']['HTTP_PROXY'] = get_wavve_proxy() if get_wavve_proxy()!='' else None
+                    epg2xml_json['WAVVE']['HTTP_PROXY'] = proxy if (proxy := get_wavve_proxy()) != '' else None
                     epg2xml_json['WAVVE']['MY_CHANNELS'] = []
                     if 'WAVVE' not in providers: providers.insert(5, 'WAVVE')
                     if 'WAVVE' not in priority: priority.insert(0, 'WAVVE')
@@ -246,13 +244,6 @@ class MYEPG:
             logger.info('set_wavve_providers() end')
         except Exception as e: 
             logger.exception(f'Exception:{str(e)}')
-
-    
-    @classmethod
-    def reset_my_channels(cls, epg2xml_data):
-        for provider in providers:
-            # logger.info(f'reset_my_channels() : {provider}')
-            epg2xml_data[provider]['MY_CHANNELS'] = []
 
 
     @classmethod
@@ -265,18 +256,25 @@ class MYEPG:
             if not ModelSetting.get_bool('use_alive_m3u'):
                 # 기존 방식 
                 for provider in providers:
-                    logger.info(f'{provider} : {ModelSetting.get_bool(provider)}')
+                    # logger.info(f'{provider} : {ModelSetting.get_bool(provider)}')
                     if ModelSetting.get_bool(provider):
                         epg2xml_json[provider]['MY_CHANNELS'] = channel_json[provider]['CHANNELS']
                     else:
                         epg2xml_json[provider]['MY_CHANNELS'] =[]
             else:
                 # 2024-01-30 alive m3u 채널명으로 추가
-                cls.reset_my_channels(epg2xml_json)
-
+                for provider in providers:
+                    epg2xml_json[provider]['MY_CHANNELS'] = []
+                    # logger.info(f'reset_my_channels() : {provider}')
+                    
                 url = ModelSetting.get('alive_m3uall_url').strip()
+                # logger.info(url)
+                m3u_channels = []
                 m3u_channels = get_m3u_channels(url)
-                m3u_channels = list(dict.fromkeys(m3u_channels))    # 중복제거
+
+                # 중복제거  
+                # (ex: MBN, TV CHOSUN, 채널A, 연합뉴스TV, YTN, SBS Biz, SBS M, MBN 플러스, LIFETIME, ANIBOX ...)
+                m3u_channels = list(dict.fromkeys(m3u_channels))   
                 # logger.info(m3u_channels)
 
                 for p in priority:
@@ -286,9 +284,20 @@ class MYEPG:
                                 # logger.info(f"priority: {p} : {channel_name}")
                                 epg2xml_json[p]['MY_CHANNELS'].append(channel)
                                 m3u_channels.remove(channel_name)
-                
+
                 logger.info(f'EPG 정보 없는 채널 : {m3u_channels}')
-            
+
+                # m3u 일 경우 dname 적용 
+                # TEST : EBS 2 누락 됐을 경우 ID값 추가
+                # TEST : KBS 소스 추가 했을 때 1TV, 2TV 추가 
+
+                # {'EPG 정보 없는 채널명': 'ID 넣고싶은 채널명 (Name)'}
+                # channel.json - CHANNELS - Name
+                missing_channels = {'EBS 2': 'EBS2', '1TV': 'KBS1', '2TV': 'KBS2'}
+                for channel in m3u_channels:
+                    if channel in missing_channels:
+                        cls.add_ids_to_missing_channel(channel, missing_channels[channel], epg2xml_json, channel_json)
+
             save_json(epg2xml_path, epg2xml_json)
             
             logger.info('set_my_channels() end')
@@ -296,7 +305,21 @@ class MYEPG:
             raise            
         except Exception as e: 
             logger.exception(f'Exception:{str(e)}')
-        
+
+
+    @classmethod
+    def add_ids_to_missing_channel(cls, key, value, epg2xml_list, channel_list):
+        try: 
+            for p in priority:
+                for channel in channel_list[p]['CHANNELS']:
+                    if channel['Name'] == value:        # EBS2, KBS1, KBS2
+                        channel['Id'] = key             # EBS 2, 1TV, 2TV
+                        logger.info(channel)
+                        epg2xml_list[p]['MY_CHANNELS'].append(channel)
+                        return 
+        except Exception as e: 
+            logger.exception(f'Exception: {str(e)}')
+
 
     @classmethod
     def check_epg2xml(cls, epg2xml_path):
@@ -361,51 +384,3 @@ class MYEPG:
             ModelSetting.set('epg_updated_time', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
         logger.info('make_xmltv() end')
-
-
-    @classmethod
-    def insert_dp_name(cls, channel, channels):
-        text = channel.find("display-name").text
-        # logger.debug(text)
-        for match in channels:
-            if text.lower() != match['wavve'].lower():
-                for m in match['name']:
-                    # logger.debug(m, text)
-                    if m.lower() == text.lower():
-                        # logger.debug(f"{m}, {text}, {match['wavve']}")
-                        name = ET.Element("display-name")
-                        name.text = match['wavve']
-                        channel.insert(0, name)
-                        if (m.lower() == 'KBS1'.lower()) or (name.text.lower() == 'KBS1'.lower()):
-                            name_1tv = ET.Element("display-name")
-                            name_1tv.text = '1TV'
-                            channel.insert(1, name_1tv)
-                        if (m.lower() == 'KBS2'.lower()) or (name.text.lower() == 'KBS2'.lower()):
-                            name_2tv = ET.Element("display-name")
-                            name_2tv.text = '2TV'
-                            channel.insert(1, name_2tv)
-                            
-
-    @classmethod
-    def match_channels(cls, xml_path):
-        try:
-            logger.info('match_channels() start')
-
-            file = Path(os.path.dirname(__file__)).joinpath('match_channels.yaml')
-            match_channels_yaml = load_yaml(file)
-            # logger.debug(match_channels_yaml)
-            match_channels = deepcopy(match_channels_yaml['match_channels'])
-            
-            tree = ET.parse(xml_path)
-            root = tree.getroot()
-            [cls.insert(c, match_channels) for c in root.findall("channel")]
-
-            with open(xml_path, 'wb') as f:
-                f.write('<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE tv SYSTEM "xmltv.dtd">\n\n'.encode('utf8'))
-                tree = ET.ElementTree(root)
-                ET.indent(tree, space="\t", level=0)
-                tree.write(f, encoding="utf-8")
-
-            logger.info('match_channels() end')
-        except Exception as e:
-            logger.exception(f"match_channels() : {e}")
