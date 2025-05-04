@@ -498,7 +498,8 @@ class MYEPG:
         new_channel = ET.Element('channel', id=item['tvg-id'])  # 원본 tvg-id 유지
         
         ET.SubElement(new_channel, 'display-name').text = item['GuideName']
-        ET.SubElement(new_channel, 'display-name').text = provider
+        # tivimate에서 sbs 채널 epg 충돌
+        #ET.SubElement(new_channel, 'display-name').text = provider
         ET.SubElement(new_channel, 'display-name').text = item['GuideNumber']
         ET.SubElement(new_channel, 'display-name').text = f"{item['GuideNumber']} {item['GuideName']}"
         ET.SubElement(new_channel, 'display-name').text = f"{item['GuideNumber']} {provider}"
