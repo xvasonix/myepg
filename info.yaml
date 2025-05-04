@@ -1,6 +1,6 @@
 title: "MY EPG"
-version: "1.0.0"
+version: "1.1.0"
 package_name: "myepg"
 developer: "include"
 description: "EPG API 플러그인"
-home: "https://github.com/myepg/myepg"
+home: "https://github.com/xvasonix/myepg"

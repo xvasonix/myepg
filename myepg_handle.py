@@ -4,8 +4,9 @@ import subprocess
 import json
 import re
 import shutil
-from datetime import datetime
 import requests
+import xml.etree.ElementTree as ET
+from datetime import datetime, timedelta
 
 # import xml.etree.ElementTree as ET
 # from copy import deepcopy
@@ -184,6 +185,18 @@ def print_log(line):
     except Exception as e:
         logger.exception(f"Exception: {str(e)}")
 
+def get_m3u_tracks(m3u_url) -> list:
+    tracks = []
+    try:
+        response = requests.get(m3u_url, timeout=30)
+        # logger.info(f'get_m3u_channels() : {response.status_code} / {response.reason}')
+        response.raise_for_status()
+        tracks = M3uParser(response.text).readM3u()
+        return tracks
+    except requests.exceptions.HTTPError:
+        raise
+    except Exception:
+        logger.exception(f'm3u 로부터 채널 이름을 가져오는 중 예외: {m3u_url}')
 
 class MYEPG:
 
@@ -380,7 +393,147 @@ class MYEPG:
         with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as proc:
             for line in proc.stderr:
                 print_log(line)
+                
+            if ModelSetting.get_bool('use_alive_plex_proxy'):
+                alive = FRAMEWORK.PluginManager.get_plugin_instance('alive')
+                if alive.ModelSetting.get_bool("use_plex_proxy"):
+                    cls.create_dummy_epg(xml_path)
 
             ModelSetting.set('epg_updated_time', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
         logger.info('make_xmltv() end')
+        
+    @classmethod
+    def create_dummy_epg(cls, xml_path):
+        logger.info('create_dummy_epg() start')
+        
+        try:
+            ddns = SystemModelSetting.get("ddns").strip()
+            lineup_url = f"{ddns}/alive/proxy/plex/lineup.json"
+            #logger.info(f"lineup.json URL: {lineup_url}")
+
+            # lineup.json 요청 및 파싱
+            response = requests.get(lineup_url, timeout=30)
+            response.raise_for_status()
+            lineup_data = response.json()
+
+            # XML 파싱
+            tree = ET.parse(xml_path)
+            root = tree.getroot()
+    
+            # 대소문자 구분 없이 매핑 (ID, GuideName 모두 lower() 처리)
+            existing_channels = {channel.get('id').lower(): channel for channel in root.findall('channel')}
+            name_to_channel = {}
+            for channel in root.findall('channel'):
+                name_elem = channel.find('display-name')
+                if name_elem is not None and name_elem.text:
+                    name = name_elem.text.lower()
+                    name_to_channel[name] = channel
+    
+            processed_ids = set()
+            processed_names = set()
+    
+            # 1단계: tvg-id (대소문자 무시)
+            for item in lineup_data:
+                channel_id = item['tvg-id'].lower()  # 소문자로 변환
+                if channel_id in existing_channels:
+                    channel = existing_channels[channel_id]
+                    cls.update_exist_channel(channel, item)
+                    processed_ids.add(channel_id)
+                    processed_names.add(item['GuideName'].lower())  # 소문자로 저장
+    
+            # 2단계: GuideName (대소문자 무시)
+            for item in lineup_data:
+                guide_name_lower = item['GuideName'].lower()
+                if guide_name_lower in processed_names:
+                    continue
+                if guide_name_lower in name_to_channel:
+                    channel = name_to_channel[guide_name_lower]
+                    cls.update_exist_channel(channel, item)
+                    processed_names.add(guide_name_lower)
+                    processed_ids.add(channel.get('id').lower())
+                    
+            if ModelSetting.get_bool('use_dummy_epg'):
+                # 3단계: 신규 채널 생성
+                for item in lineup_data:
+                    channel_id_lower = item['tvg-id'].lower()
+                    guide_name_lower = item['GuideName'].lower()
+                    if channel_id_lower not in processed_ids and guide_name_lower not in processed_names:
+                        cls.create_dummy_channel(root, item)
+                        cls.create_dummy_programme(
+                            root,
+                            item,
+                            title=item['GuideName']
+                        )
+
+    
+            tree.write(xml_path, encoding='utf-8', xml_declaration=True)
+            logger.info("XML 업데이트 완료")
+    
+        except Exception as e:
+            logger.exception(f'Exception:{str(e)}')
+        
+        logger.info('create_dummy_epg() end')
+    
+    @classmethod
+    def update_exist_channel(cls, channel, item):
+        provider = item['tvg-id'].split('.')[1].lower() if '.' in item['tvg-id'] else 'UNKNOWN'
+        display_names = channel.findall('display-name')
+        
+        # display-name 요소가 5개 미만일 경우 생성
+        while len(display_names) < 5:
+            ET.SubElement(channel, 'display-name')
+            display_names = channel.findall('display-name')
+        
+        # 값 업데이트 (모든 값 원본 유지, 비교 시에만 lower() 사용)
+        display_names[0].text = item['GuideName']  # 원본 GuideName 유지
+        display_names[1].text = provider
+        display_names[2].text = item['GuideNumber']
+        display_names[3].text = f"{item['GuideNumber']} {item['GuideName']}"
+        display_names[4].text = f"{item['GuideNumber']} {provider}"
+    
+    @classmethod
+    def create_dummy_channel(cls, root, item):
+        provider = item['tvg-id'].split('.')[1].lower() if '.' in item['tvg-id'] else 'UNKNOWN'
+        new_channel = ET.Element('channel', id=item['tvg-id'])  # 원본 tvg-id 유지
+        
+        ET.SubElement(new_channel, 'display-name').text = item['GuideName']
+        ET.SubElement(new_channel, 'display-name').text = provider
+        ET.SubElement(new_channel, 'display-name').text = item['GuideNumber']
+        ET.SubElement(new_channel, 'display-name').text = f"{item['GuideNumber']} {item['GuideName']}"
+        ET.SubElement(new_channel, 'display-name').text = f"{item['GuideNumber']} {provider}"
+        
+        root.append(new_channel)
+    
+    @classmethod
+    def create_dummy_programme(cls, root, item, title="방송 정보 없음", desc="방송 정보 없음", rating="전체 관람가"):
+        # 현재 시각 (KST)
+        now = datetime.now()
+        start = (now - timedelta(hours=1)).strftime('%Y%m%d%H%M%S') + " +0900"
+        stop = (now + timedelta(days=1)).strftime('%Y%m%d%H%M%S') + " +0900"
+
+        # <programme> 태그 생성
+        programme = ET.Element('programme', {
+            'start': start,
+            'stop': stop,
+            'channel': item['tvg-id']
+        })
+    
+        # <title lang="ko">...</title>
+        title_elem = ET.SubElement(programme, 'title', {'lang': 'ko'})
+        title_elem.text = title
+    
+        # <desc lang="ko">...</desc>
+        desc_elem = ET.SubElement(programme, 'desc', {'lang': 'ko'})
+        desc_elem.text = desc
+    
+        # <rating system="KMRB"><value>...</value></rating>
+        rating_elem = ET.SubElement(programme, 'rating', {'system': 'KMRB'})
+        value_elem = ET.SubElement(rating_elem, 'value')
+        value_elem.text = rating
+    
+        # <programme> 추가
+        root.append(programme)
+
+
+

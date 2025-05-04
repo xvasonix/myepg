@@ -1,5 +1,7 @@
 #### MYEPG
-1. 
+1.
+    1. <strong>ALive PlexProxy 연동 기능 추가</strong> (2025-05-05 기능 추가, 데브닉스)
+2. 
     1. <strong>ALive m3uall tag-name 사용 : ON</strong> (2024-01-30 기능 추가)
         * alive m3uall 의 채널정보(tvg-name)를 사용해 EPG 생성
             <br>
@@ -10,9 +12,9 @@
         * 원하는 소스 선택 
         <br><br>
 
-2. 설정 저장 
-3. 즉시 실행 or 1회 실행
-4. 테스트 마쳤으면 스케쥴링 설정 하고 api 입력 
+3. 설정 저장 
+4. 즉시 실행 or 1회 실행
+5. 테스트 마쳤으면 스케쥴링 설정 하고 api 입력 
   
 <br><br>
 

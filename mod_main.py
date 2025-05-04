@@ -30,6 +30,8 @@ class ModuleMain(PluginModuleBase):
             'SPOTV': 'False',
             'block_wavve': 'False',
             'use_alive_m3u': 'False',
+            'use_alive_plex_proxy': 'False',
+            'use_dummy_epg': 'False',
             'epg_updated_time': '',
             'alive_m3uall_url': ToolUtil.make_apikey_url(f"/alive/api/m3uall"),
             # 'match_m3u_epg': 'False',

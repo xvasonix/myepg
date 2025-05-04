@@ -34,6 +34,19 @@
       ]) }}
       {{ macros.setting_input_text('alive_m3uall_url', 'ALive m3uall url', value=arg['alive_m3uall_url']) }}
       {{ macros.m_hr() }}
+      
+      {{ macros.setting_checkbox('use_alive_plex_proxy', 'ALive 채널순서 사용', value=arg['use_alive_plex_proxy'], 
+      desc=[
+      'OFF : xmltv의 EPG 순서로 채널 정렬',
+      'ON : ALive와 동일한 순서로 채널 정렬 (ALive Plex Proxy 사용시만 해당)' 
+      ]) }}
+      
+      {{ macros.setting_checkbox('use_dummy_epg', 'Dummy EPG 사용', value=arg['use_dummy_epg'], 
+      desc=[
+      'OFF : EPG가 없는 채널은 Plex Live TV 가이드에 사라짐',
+      'ON : EPG가 없는 채널도 Plex Live TV 가이드에 표시됨' 
+      ]) }}
+      {{ macros.m_hr() }}
 
       <div id="use_alive_m3u_div" class="collapse">
       {{ macros.setting_checkbox('KT', 'KT', value=arg['KT']) }}
