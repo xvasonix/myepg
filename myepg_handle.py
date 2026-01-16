@@ -300,16 +300,6 @@ class MYEPG:
 
                 logger.info(f'EPG 정보 없는 채널 : {m3u_channels}')
 
-                # m3u 일 경우 dname 적용 
-                # TEST : EBS 2 누락 됐을 경우 ID값 추가
-                # TEST : KBS 소스 추가 했을 때 1TV, 2TV 추가 
-
-                # {'EPG 정보 없는 채널명': 'ID 넣고싶은 채널명 (Name)'}
-                # channel.json - CHANNELS - Name
-                missing_channels = {'EBS 2': 'EBS2', '1TV': 'KBS1', '2TV': 'KBS2'}
-                for channel in m3u_channels:
-                    if channel in missing_channels:
-                        cls.add_ids_to_missing_channel(channel, missing_channels[channel], epg2xml_json, channel_json)
 
             save_json(epg2xml_path, epg2xml_json)
             

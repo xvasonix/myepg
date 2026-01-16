@@ -212,3 +212,9 @@ pyrightconfig.json
 test.py
 plex_refresh.py
 test.yaml
+
+# resource directory
+Channel.json
+epg2xml.json
+xmltv.xml
+file/
