@@ -29,8 +29,8 @@ logger = P.logger
 
 
 urls = []
-providers = ['KT', 'LG', 'SK', 'DAUM', 'NAVER', 'WAVVE', 'TVING', 'SPOTV']
-priority = ['WAVVE', 'TVING', 'SPOTV', 'KT', 'LG', 'SK', 'DAUM', 'NAVER']
+providers = ['KT', 'LG', 'SK', 'DAUM', 'NAVER', 'WAVVE', 'TVING', 'SPOTV', 'SBS']
+priority = ['WAVVE', 'TVING', 'SPOTV', 'SBS', 'KT', 'LG', 'SK', 'DAUM', 'NAVER']
 
         
 class M3uParser:

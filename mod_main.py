@@ -28,6 +28,7 @@ class ModuleMain(PluginModuleBase):
             'WAVVE': 'False',
             'TVING': 'False',
             'SPOTV': 'False',
+            'SBS': 'False',
             'block_wavve': 'False',
             'use_alive_m3u': 'False',
             'use_alive_plex_proxy': 'False',
