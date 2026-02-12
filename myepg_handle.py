@@ -479,8 +479,15 @@ class MYEPG:
     @classmethod
     def _set_channel_display_names(cls, channel, item):
         # 기존 display-name 제거
-        for dn in channel.findall('display-name'):
+
+        removed_count = 0
+        while True:
+            dn = channel.find('display-name')
+            if dn is None:
+                break
             channel.remove(dn)
+            removed_count += 1
+        # logger.info(f"Removed {removed_count} display-name tags for {item['tvg-id']}")
             
         # provider = item['tvg-id'].split('.')[1].lower() if '.' in item['tvg-id'] else 'UNKNOWN'
         
