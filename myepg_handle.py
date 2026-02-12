@@ -477,7 +477,7 @@ class MYEPG:
         
         # 값 업데이트 (모든 값 원본 유지, 비교 시에만 lower() 사용)
         display_names[0].text = item['GuideName']  # 원본 GuideName 유지
-        # display_names[1].text = provider
+        display_names[1].text = "" # provider
         display_names[2].text = item['GuideNumber']
         display_names[3].text = f"{item['GuideNumber']} {item['GuideName']}"
         display_names[4].text = f"{item['GuideNumber']} {provider}"
