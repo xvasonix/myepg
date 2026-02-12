@@ -467,35 +467,31 @@ class MYEPG:
     
     @classmethod
     def update_exist_channel(cls, channel, item):
-        provider = item['tvg-id'].split('.')[1].lower() if '.' in item['tvg-id'] else 'UNKNOWN'
-        display_names = channel.findall('display-name')
-        
-        # display-name 요소가 5개 미만일 경우 생성
-        while len(display_names) < 5:
-            ET.SubElement(channel, 'display-name')
-            display_names = channel.findall('display-name')
-        
-        # 값 업데이트 (모든 값 원본 유지, 비교 시에만 lower() 사용)
-        display_names[0].text = item['GuideName']  # 원본 GuideName 유지
-        display_names[1].text = "" # provider
-        display_names[2].text = item['GuideNumber']
-        display_names[3].text = f"{item['GuideNumber']} {item['GuideName']}"
-        display_names[4].text = f"{item['GuideNumber']} {provider}"
+        cls._set_channel_display_names(channel, item)
     
     @classmethod
     def create_dummy_channel(cls, root, item):
-        provider = item['tvg-id'].split('.')[1].lower() if '.' in item['tvg-id'] else 'UNKNOWN'
+        # provider = item['tvg-id'].split('.')[1].lower() if '.' in item['tvg-id'] else 'UNKNOWN'
         new_channel = ET.Element('channel', id=item['tvg-id'])  # 원본 tvg-id 유지
-        
-        ET.SubElement(new_channel, 'display-name').text = item['GuideName']
-        # tivimate에서 sbs 채널 epg 충돌
-        #ET.SubElement(new_channel, 'display-name').text = provider
-        ET.SubElement(new_channel, 'display-name').text = item['GuideNumber']
-        ET.SubElement(new_channel, 'display-name').text = f"{item['GuideNumber']} {item['GuideName']}"
-        ET.SubElement(new_channel, 'display-name').text = f"{item['GuideNumber']} {provider}"
-        
+        cls._set_channel_display_names(new_channel, item)
         root.append(new_channel)
-    
+
+    @classmethod
+    def _set_channel_display_names(cls, channel, item):
+        # 기존 display-name 제거
+        for dn in channel.findall('display-name'):
+            channel.remove(dn)
+            
+        # provider = item['tvg-id'].split('.')[1].lower() if '.' in item['tvg-id'] else 'UNKNOWN'
+        
+        # 새 display-name 추가
+        ET.SubElement(channel, 'display-name').text = item['GuideName']
+        # tivimate에서 sbs 채널 epg 충돌
+        # ET.SubElement(channel, 'display-name').text = provider
+        ET.SubElement(channel, 'display-name').text = item['GuideNumber']
+        ET.SubElement(channel, 'display-name').text = f"{item['GuideNumber']} {item['GuideName']}"
+        # ET.SubElement(channel, 'display-name').text = f"{item['GuideNumber']} {provider}"
+
     @classmethod
     def create_dummy_programme(cls, root, item, title="방송 정보 없음", desc="방송 정보 없음", rating="전체 관람가"):
         # 현재 시각 (KST)
